@@ -32,7 +32,7 @@
 :root{
   --bg:#FAFAF8;--bg-alt:#F2F0EA;--dark:#0C0C0C;
   --muted:#6B6B6B;--muted2:#A0A0A0;
-  --accent:#0D9488;--accent2:#14B8A6;--acc-s:#CCFBF1;--acc-xs:#EDFAF8;
+  --accent:#00C896;--accent2:#1B2B6B;--acc-s:#CCFBF1;--acc-xs:#EDFAF8;
   --white:#FFF;--red:#EF4444;--green:#22C55E;
   --r:14px;--rl:24px;--ease:cubic-bezier(.4,0,.2,1);--spring:cubic-bezier(.34,1.56,.64,1)
 }
@@ -54,6 +54,7 @@ header.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.08)}
 .nav{display:flex;align-items:center;justify-content:space-between;gap:20px}
 .logo{font-size:1.28rem;font-weight:900;letter-spacing:-.05em;flex-shrink:0}
 .logo em{font-style:normal;color:var(--accent)}
+.logo-img{height:38px;width:auto;display:block}
 .nav-links{display:flex;gap:24px;list-style:none}
 .nav-links a{font-size:.87rem;font-weight:600;color:var(--muted);transition:color .2s}
 .nav-links a:hover{color:var(--dark)}
@@ -354,7 +355,7 @@ footer{background:#080808;padding:52px 0 32px}
 <header id="hdr">
   <div class="container">
     <div class="nav">
-      <a href="/" class="logo">Recepc<em>IA</em></a>
+      <a href="/"><img src="logo.svg" alt="RecepcIA" class="logo-img"></a>
       <ul class="nav-links">
         <li><a href="#como-funciona">Cómo funciona</a></li>
         <li><a href="#funcionalidades">Funcionalidades</a></li>
@@ -747,7 +748,7 @@ footer{background:#080808;padding:52px 0 32px}
 <footer>
   <div class="container">
     <div class="ft-top">
-      <div class="ft-brand"><div class="logo">Recepc<em>IA</em></div><p class="ft-tag">Recepcionista IA especializada<br>en clínicas dentales</p></div>
+      <div class="ft-brand"><div class="logo"><img src="logo-white.svg" alt="RecepcIA" class="logo-img"></div><p class="ft-tag">Recepcionista IA especializada<br>en clínicas dentales</p></div>
       <div class="ft-links">
         <div class="ft-col"><h4>Producto</h4><ul><li><a href="#como-funciona">Cómo funciona</a></li><li><a href="#funcionalidades">Funcionalidades</a></li><li><a href="#precios">Precios</a></li><li><a href="#faq">FAQ</a></li></ul></div>
         <div class="ft-col"><h4>Especialidades</h4><ul><li><a href="dental.html">Clínicas dentales</a></li><li><a href="estetica.html">Clínicas estéticas</a></li><li><a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20gratuita%20de%20RecepcIA" target="_blank" rel="noopener">Demo gratuita</a></li></ul></div>
