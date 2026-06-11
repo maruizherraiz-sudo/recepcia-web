@@ -1,14 +1,7 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": " ------ ",
+  "name": "snowy-field-ce2a",
   "compatibility_date": "2026-06-11",
-  "observability": {
-    "enabled": true
-  },
   "assets": {
     "directory": "."
-  },
-  "compatibility_flags": [
-    "nodejs_compat"
-  ]
+  }
 }
