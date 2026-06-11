@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ballesteros Clínica Dental — Demo RecepcIA Widget</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #fff; color: #111; }
+
+    /* ── FAKE CLINIC WEBSITE ── */
+    .clinic-header { background: #1a3a5c; color: #fff; padding: 16px 32px; display: flex; align-items: center; gap: 16px; }
+    .clinic-logo { font-size: 1.3rem; font-weight: 700; letter-spacing: -.5px; }
+    .clinic-logo span { color: #5EEAD4; }
+    nav a { color: rgba(255,255,255,.7); text-decoration: none; margin-left: 24px; font-size: .9rem; }
+    nav a:hover { color: #fff; }
+    .hero-clinic { background: linear-gradient(135deg, #1a3a5c 0%, #0D9488 100%); color: #fff; padding: 80px 32px; text-align: center; }
+    .hero-clinic h1 { font-size: 2.4rem; margin-bottom: 16px; }
+    .hero-clinic p { font-size: 1.1rem; opacity: .8; max-width: 500px; margin: 0 auto 32px; }
+    .hero-clinic .btn-clinic { background: #fff; color: #1a3a5c; padding: 14px 32px; border-radius: 100px; font-weight: 700; text-decoration: none; font-size: 1rem; }
+    .services { padding: 64px 32px; max-width: 900px; margin: 0 auto; }
+    .services h2 { text-align: center; font-size: 1.8rem; margin-bottom: 40px; color: #1a3a5c; }
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .service-card { border: 1px solid #e5e7eb; border-radius: 16px; padding: 28px 20px; text-align: center; }
+    .service-card .ico { font-size: 2rem; margin-bottom: 12px; }
+    .service-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; color: #1a3a5c; }
+    .service-card p { font-size: .85rem; color: #6b7280; }
+    .demo-badge { background: #FEF3C7; border: 1px solid #F59E0B; color: #92400E; text-align: center; padding: 10px; font-size: .85rem; font-weight: 600; }
+
+    /* ── WIDGET ── */
+    #rc-widget-btn {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      width: 60px; height: 60px; border-radius: 50%;
+      background: linear-gradient(135deg, #0D9488, #14B8A6);
+      box-shadow: 0 4px 20px rgba(13,148,136,.4);
+      cursor: pointer; border: none;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .2s, box-shadow .2s;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    #rc-widget-btn:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(13,148,136,.5); animation: none; }
+    #rc-widget-btn svg { width: 28px; height: 28px; fill: #fff; }
+    @keyframes pulse { 0%,100%{box-shadow:0 4px 20px rgba(13,148,136,.4)} 50%{box-shadow:0 4px 32px rgba(13,148,136,.7)} }
+
+    #rc-widget-window {
+      position: fixed; bottom: 96px; right: 24px; z-index: 9999;
+      width: 370px; height: 540px;
+      background: #fff; border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.18);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      transform: scale(.85) translateY(20px); opacity: 0;
+      pointer-events: none;
+      transition: transform .25s cubic-bezier(.34,1.56,.64,1), opacity .2s;
+    }
+    #rc-widget-window.open { transform: scale(1) translateY(0); opacity: 1; pointer-events: all; }
+
+    .rc-header {
+      background: linear-gradient(135deg, #0C0C0C 0%, #1a1a1a 100%);
+      padding: 16px 18px; display: flex; align-items: center; gap: 12px;
+      flex-shrink: 0;
+    }
+    .rc-avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg,#0D9488,#14B8A6); display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0; }
+    .rc-header-info { flex: 1; }
+    .rc-header-name { color: #fff; font-weight: 700; font-size: .95rem; }
+    .rc-header-status { color: #5EEAD4; font-size: .75rem; display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+    .rc-dot { width: 7px; height: 7px; background: #22C55E; border-radius: 50%; animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .rc-close { background: none; border: none; color: rgba(255,255,255,.5); cursor: pointer; font-size: 1.3rem; padding: 4px; line-height: 1; transition: color .15s; }
+    .rc-close:hover { color: #fff; }
+
+    .rc-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; background: #F9FAFB; }
+    .rc-messages::-webkit-scrollbar { width: 4px; }
+    .rc-messages::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+
+    .rc-msg { max-width: 82%; display: flex; flex-direction: column; gap: 3px; }
+    .rc-msg.bot { align-self: flex-start; }
+    .rc-msg.user { align-self: flex-end; }
+    .rc-bubble { padding: 10px 14px; border-radius: 16px; font-size: .875rem; line-height: 1.5; }
+    .rc-msg.bot .rc-bubble { background: #fff; color: #111; border-bottom-left-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .rc-msg.user .rc-bubble { background: #0D9488; color: #fff; border-bottom-right-radius: 4px; }
+    .rc-time { font-size: .7rem; color: #9ca3af; padding: 0 4px; }
+    .rc-msg.user .rc-time { text-align: right; }
+
+    .rc-typing { display: flex; gap: 4px; align-items: center; padding: 12px 14px; background: #fff; border-radius: 16px; border-bottom-left-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,.08); width: fit-content; }
+    .rc-typing span { width: 7px; height: 7px; background: #9ca3af; border-radius: 50%; animation: typing .9s ease-in-out infinite; }
+    .rc-typing span:nth-child(2) { animation-delay: .15s; }
+    .rc-typing span:nth-child(3) { animation-delay: .3s; }
+    @keyframes typing { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+
+    .rc-input-wrap { padding: 12px 14px; border-top: 1px solid #f3f4f6; display: flex; gap: 8px; align-items: flex-end; background: #fff; flex-shrink: 0; }
+    #rc-input { flex: 1; border: 1.5px solid #e5e7eb; border-radius: 22px; padding: 10px 16px; font-size: .875rem; outline: none; resize: none; font-family: inherit; max-height: 100px; line-height: 1.4; transition: border-color .15s; }
+    #rc-input:focus { border-color: #0D9488; }
+    #rc-send { width: 38px; height: 38px; border-radius: 50%; background: #0D9488; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .15s, transform .1s; }
+    #rc-send:hover { background: #0f766e; }
+    #rc-send:active { transform: scale(.92); }
+    #rc-send svg { width: 17px; height: 17px; fill: #fff; }
+
+    .rc-powered { text-align: center; padding: 6px; font-size: .68rem; color: #d1d5db; background: #fff; flex-shrink: 0; }
+    .rc-powered a { color: #0D9488; text-decoration: none; }
+
+    @media(max-width:420px) {
+      #rc-widget-window { width: calc(100vw - 16px); right: 8px; bottom: 88px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="demo-badge">⚡ DEMO — Así se vería el widget de RecepcIA en la web de una clínica</div>
+
+<!-- FAKE CLINIC WEBSITE -->
+<header class="clinic-header">
+  <div class="clinic-logo">Ballesteros <span>Clínica Dental</span></div>
+  <nav>
+    <a href="#">Inicio</a>
+    <a href="#">Tratamientos</a>
+    <a href="#">El equipo</a>
+    <a href="#">Contacto</a>
+  </nav>
+</header>
+
+<section class="hero-clinic">
+  <h1>Tu sonrisa, nuestra pasión</h1>
+  <p>Más de 20 años cuidando la salud dental de las familias de Valencia</p>
+  <a href="#" class="btn-clinic">Pedir cita →</a>
+</section>
+
+<section class="services">
+  <h2>Nuestros tratamientos</h2>
+  <div class="services-grid">
+    <div class="service-card"><div class="ico">🦷</div><h3>Implantes dentales</h3><p>Solución permanente para dientes perdidos. Desde 900€.</p></div>
+    <div class="service-card"><div class="ico">😁</div><h3>Ortodoncia</h3><p>Brackets e Invisalign para una sonrisa perfecta.</p></div>
+    <div class="service-card"><div class="ico">✨</div><h3>Blanqueamiento</h3><p>Resultados visibles desde la primera sesión. 250€.</p></div>
+  </div>
+</section>
+
+<!-- WIDGET BUTTON -->
+<button id="rc-widget-btn" onclick="toggleWidget()" aria-label="Abrir chat">
+  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+</button>
+
+<!-- WIDGET WINDOW -->
+<div id="rc-widget-window">
+  <div class="rc-header">
+    <div class="rc-avatar">🤖</div>
+    <div class="rc-header-info">
+      <div class="rc-header-name">RecepcIA — Ballesteros Dental</div>
+      <div class="rc-header-status"><span class="rc-dot"></span> En línea ahora</div>
+    </div>
+    <button class="rc-close" onclick="toggleWidget()">✕</button>
+  </div>
+
+  <div class="rc-messages" id="rc-messages">
+    <div class="rc-msg bot">
+      <div class="rc-bubble">¡Hola! 👋 Soy la recepcionista virtual de Ballesteros Clínica Dental. Estoy aquí para ayudarte con citas, precios o cualquier duda. ¿En qué te puedo ayudar?</div>
+      <div class="rc-time">Ahora</div>
+    </div>
+  </div>
+
+  <div class="rc-input-wrap">
+    <textarea id="rc-input" placeholder="Escribe tu mensaje..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button id="rc-send" onclick="sendMessage()">
+      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+  <div class="rc-powered">Powered by <a href="https://recepcia.health" target="_blank">RecepcIA</a></div>
+</div>
+
+<script>
+const WORKER_URL = 'https://recepcia.maruizherraiz.workers.dev';
+let isOpen = false;
+let sessionId = 'demo_' + Math.random().toString(36).substr(2, 9);
+
+function toggleWidget() {
+  isOpen = !isOpen;
+  const win = document.getElementById('rc-widget-window');
+  const btn = document.getElementById('rc-widget-btn');
+  if (isOpen) {
+    win.classList.add('open');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="fill:white;width:24px;height:24px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>';
+    document.getElementById('rc-input').focus();
+  } else {
+    win.classList.remove('open');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="fill:white;width:28px;height:28px"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>';
+  }
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+function getTime() {
+  return new Date().toLocaleTimeString('es-ES', {hour:'2-digit',minute:'2-digit'});
+}
+
+function addMessage(text, type) {
+  const msgs = document.getElementById('rc-messages');
+  const div = document.createElement('div');
+  div.className = 'rc-msg ' + type;
+  div.innerHTML = `<div class="rc-bubble">${text}</div><div class="rc-time">${getTime()}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('rc-messages');
+  const div = document.createElement('div');
+  div.className = 'rc-msg bot';
+  div.id = 'rc-typing';
+  div.innerHTML = '<div class="rc-typing"><span></span><span></span><span></span></div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideTyping() {
+  const t = document.getElementById('rc-typing');
+  if (t) t.remove();
+}
+
+async function sendMessage() {
+  const input = document.getElementById('rc-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  input.style.height = 'auto';
+  addMessage(text, 'user');
+  showTyping();
+
+  try {
+    const res = await fetch(WORKER_URL + '/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, sessionId })
+    });
+    const data = await res.json();
+    hideTyping();
+    addMessage(data.reply || 'Lo siento, ha habido un error. Inténtalo de nuevo.', 'bot');
+  } catch (e) {
+    hideTyping();
+    addMessage('En este momento no puedo conectarme. Por favor llámanos al 633 032 985.', 'bot');
+  }
+}
+</script>
+</body>
+</html>

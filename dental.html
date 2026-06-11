@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>RecepcIA — Recepcionista Virtual con IA para Clínicas Dentales | Automatiza tu Consulta</title>
+  <meta name="description" content="La recepcionista IA especializada en clínicas dentales. Gestiona urgencias, agenda limpiezas y revisiones 24/7 y reduce ausencias hasta un 80%. Lista en 48 horas. Sin permanencia." />
+  <meta name="keywords" content="recepcionista virtual clínica dental, IA clínica dental, automatización odontología, agenda citas dental automática, asistente virtual odontología, recepcionista IA dental España, automatización consulta dental" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://mahealth.com/dental" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mahealth.com/dental" />
+  <meta property="og:title" content="RecepcIA — Recepcionista IA para Clínicas Dentales" />
+  <meta property="og:description" content="Gestiona urgencias, agenda citas y nunca pierdas un paciente dental. IA lista en 48 horas." />
+  <meta property="og:locale" content="es_ES" />
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org","@type":"Service",
+    "name":"RecepcIA — Recepcionista Virtual IA para Clínicas Dentales",
+    "description":"Automatización de la recepción para clínicas dentales. Gestión de urgencias, agenda de citas 24/7 y reducción de ausencias mediante inteligencia artificial.",
+    "provider":{"@type":"Organization","name":"RecepcIA","url":"https://mahealth.com"},
+    "serviceType":"Automatización con IA para Odontología",
+    "areaServed":{"@type":"Country","name":"España"},
+    "audience":{"@type":"BusinessAudience","audienceType":"Clínicas dentales y odontología"}
+  }
+  </script>
+
+  <style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FAFAF8;--bg-alt:#F2F0EA;--dark:#0C0C0C;
+  --muted:#6B6B6B;--muted2:#A0A0A0;
+  --accent:#0D9488;--accent2:#14B8A6;--acc-s:#CCFBF1;--acc-xs:#EDFAF8;
+  --white:#FFF;--red:#EF4444;--green:#22C55E;
+  --r:14px;--rl:24px;--ease:cubic-bezier(.4,0,.2,1);--spring:cubic-bezier(.34,1.56,.64,1)
+}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--dark);line-height:1.6;overflow-x:hidden}
+h1,h2,h3,h4{font-weight:800;letter-spacing:-.03em;line-height:1.1}
+h1{font-size:clamp(2.3rem,5.2vw,4.6rem)}
+h2{font-size:clamp(1.9rem,3.8vw,3.3rem)}
+h3{font-size:1.12rem}
+p{color:var(--muted);font-size:1rem;line-height:1.75}
+a{text-decoration:none;color:inherit}
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+#pgbar{position:fixed;top:0;left:0;z-index:600;height:3px;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2),#A7F3D0);transition:width .08s linear;pointer-events:none}
+
+header{position:fixed;top:3px;left:0;right:0;z-index:400;padding:15px 0;background:rgba(250,250,248,.93);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.06);transform:translateY(-110%);animation:navIn .65s .1s var(--ease) forwards;transition:box-shadow .3s}
+header.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.08)}
+@keyframes navIn{to{transform:none}}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-size:1.28rem;font-weight:900;letter-spacing:-.05em;flex-shrink:0}
+.logo em{font-style:normal;color:var(--accent)}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{font-size:.87rem;font-weight:600;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--dark)}
+.nav-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;z-index:500}
+.nav-toggle span{display:block;width:22px;height:2px;background:var(--dark);border-radius:2px;transition:transform .3s var(--ease),opacity .3s}
+.nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle.open span:nth-child(2){opacity:0}
+.nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.nav-drawer{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;transform:translateX(100%);transition:transform .4s var(--ease)}
+.nav-drawer.open{transform:none}
+.nav-drawer a{font-size:1.6rem;font-weight:800;color:var(--dark);letter-spacing:-.03em}
+.nav-drawer a:hover{color:var(--accent)}
+
+.btn{display:inline-flex;align-items:center;gap:7px;padding:12px 26px;border-radius:100px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;position:relative;overflow:hidden;transition:transform .2s var(--spring),box-shadow .25s,background .2s,color .2s}
+.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.22) 50%,transparent 70%);transform:translateX(-100%);transition:transform .55s var(--ease)}
+.btn:hover::after{transform:translateX(100%)}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(.97)}
+.btn-d{background:var(--dark);color:#fff}
+.btn-d:hover{background:var(--accent);box-shadow:0 10px 30px rgba(13,148,136,.3)}
+.btn-a{background:var(--accent);color:#fff}
+.btn-a:hover{background:var(--accent2);box-shadow:0 10px 30px rgba(13,148,136,.3)}
+.btn-g{background:transparent;color:var(--dark);border:1.5px solid rgba(0,0,0,.14)}
+.btn-g:hover{background:var(--dark);color:#fff}
+.btn-lg{padding:17px 42px;font-size:.97rem}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(13,148,136,0)}50%{box-shadow:0 0 0 14px rgba(13,148,136,.14)}}
+.btn-glow{animation:glow 2.8s ease-in-out infinite}
+.btn-glow:hover{animation:none}
+
+.sec-lbl{display:block;font-size:.74rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+
+/* HERO */
+.hero{min-height:100svh;padding:130px 0 80px;position:relative;overflow:hidden;display:flex;align-items:center}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 72% 18%,rgba(13,148,136,.12) 0%,transparent 52%),radial-gradient(ellipse at 8% 80%,rgba(13,148,136,.07) 0%,transparent 48%),var(--bg)}
+.hero-dots{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle,rgba(13,148,136,.11) 1px,transparent 1px);background-size:36px 36px;mask-image:radial-gradient(ellipse 55% 65% at 85% 42%,black 20%,transparent);-webkit-mask-image:radial-gradient(ellipse 55% 65% at 85% 42%,black 20%,transparent)}
+.hero .container{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.hero-content{position:relative;z-index:1}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;background:var(--acc-s);color:var(--accent);border-radius:100px;font-size:.79rem;font-weight:700;letter-spacing:.04em;margin-bottom:30px;opacity:0;transform:scale(.85) translateY(8px);animation:popIn .65s .35s var(--spring) forwards}
+@keyframes popIn{to{opacity:1;transform:scale(1) translateY(0)}}
+.bdot{width:7px;height:7px;background:var(--accent);border-radius:50%;flex-shrink:0;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero h1{margin-bottom:22px}
+.w{display:inline-block;opacity:0;transform:translateY(26px);animation:wIn .52s calc(.52s + var(--i) * .09s) var(--ease) forwards}
+.w.c{color:var(--accent)}
+@keyframes wIn{to{opacity:1;transform:none}}
+.hero-p{font-size:1.08rem;max-width:510px;margin-bottom:40px;opacity:0;transform:translateY(12px);animation:wIn .6s 1s var(--ease) forwards}
+.hero-btns{display:flex;gap:13px;flex-wrap:wrap;margin-bottom:40px;opacity:0;transform:translateY(10px);animation:wIn .6s 1.12s var(--ease) forwards}
+.soc-proof{display:flex;align-items:center;gap:12px;opacity:0;animation:wIn .6s 1.28s var(--ease) forwards}
+.sp-avs{display:flex}
+.spa{width:30px;height:30px;border-radius:50%;border:2.5px solid var(--bg);background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;margin-left:-8px}
+.spa:first-child{margin-left:0}
+.spa:nth-child(2){background:#5EEAD4}.spa:nth-child(3){background:#0F766E}
+.soc-text{font-size:.8rem;color:var(--muted)}
+.soc-text strong{color:var(--dark)}
+
+/* PHONE */
+.hero-visual{display:flex;justify-content:center;align-items:center;position:relative;z-index:1;opacity:0;transform:translateY(20px);animation:wIn .85s .65s var(--ease) forwards}
+.phone-wrap{position:relative;padding:44px 64px}
+.phone-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;background:radial-gradient(circle,rgba(13,148,136,.22),transparent 68%);border-radius:50%;filter:blur(18px);animation:glow 3.5s ease-in-out infinite}
+.phone{width:265px;background:#111;border-radius:44px;padding:13px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 60px 120px rgba(0,0,0,.45),0 20px 40px rgba(13,148,136,.18);transform:rotate(-4deg);animation:phoneFloat 5s ease-in-out infinite}
+@keyframes phoneFloat{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(-4deg) translateY(-14px)}}
+.phone-notch{width:76px;height:20px;background:#111;border-radius:0 0 12px 12px;margin:0 auto 8px;position:relative;z-index:2}
+.phone-screen{background:#1C1C1E;border-radius:32px;overflow:hidden;height:490px;display:flex;flex-direction:column}
+.phone-hdr{background:#252527;padding:13px 15px;display:flex;align-items:center;gap:9px;flex-shrink:0}
+.ph-back{color:var(--accent);font-size:.85rem;font-weight:700}
+.ph-av{width:33px;height:33px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;flex-shrink:0}
+.ph-nm{font-size:.8rem;font-weight:700;color:#fff;line-height:1.2}
+.ph-st{font-size:.63rem;color:#4ADE80;font-weight:600}
+.phone-msgs{flex:1;padding:13px 11px;display:flex;flex-direction:column;gap:7px;overflow:hidden}
+.pm{font-size:.74rem;border-radius:13px;padding:9px 12px;max-width:84%;line-height:1.5;opacity:0}
+.pm.u{background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);align-self:flex-start;transform:translateX(-10px);animation:pmL .4s var(--ease) forwards}
+.pm.a{background:var(--accent);color:#fff;align-self:flex-end;transform:translateX(10px);animation:pmR .4s var(--ease) forwards;border-radius:13px 13px 3px 13px}
+.pm:nth-child(1){animation-delay:1.1s}.pm:nth-child(2){animation-delay:2.5s}.pm:nth-child(3){animation-delay:3.9s}.pm:nth-child(4){animation-delay:5.2s}.pm:nth-child(5){animation-delay:6.5s}
+@keyframes pmL{to{opacity:1;transform:none}}@keyframes pmR{to{opacity:1;transform:none}}
+.phone-inp{background:#252527;padding:11px 13px;display:flex;align-items:center;gap:9px;flex-shrink:0}
+.pi-bar{flex:1;background:rgba(255,255,255,.07);border-radius:18px;padding:8px 13px;font-size:.7rem;color:rgba(255,255,255,.28)}
+.pi-btn{width:30px;height:30px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+.fbadge{position:absolute;background:#fff;border-radius:13px;padding:9px 13px;box-shadow:0 8px 24px rgba(0,0,0,.13);font-size:.76rem;font-weight:700;display:flex;align-items:center;gap:7px;white-space:nowrap;color:var(--dark)}
+.fb1{top:10px;right:0;animation:fbf 4s ease-in-out infinite}
+.fb2{bottom:55px;left:0;animation:fbf 4s 1.8s ease-in-out infinite}
+.fbd{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.fbd.g{background:var(--green)}.fbd.t{background:var(--accent)}
+@keyframes fbf{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+/* TRUST BAR */
+.trust-bar{padding:0;border-top:1px solid rgba(0,0,0,.07);border-bottom:1px solid rgba(0,0,0,.07);overflow:hidden}
+.trust-track-wrap{display:flex;align-items:center;padding:22px 0}
+.trust-lbl{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);white-space:nowrap;padding:0 28px;flex-shrink:0;border-right:1px solid rgba(0,0,0,.08)}
+.trust-marquee{flex:1;overflow:hidden}
+.trust-track{display:flex;animation:marquee 22s linear infinite;width:max-content}
+.trust-track:hover{animation-play-state:paused}
+.ti{display:flex;align-items:center;gap:7px;font-size:.84rem;font-weight:700;color:var(--muted);padding:0 32px;opacity:.55;transition:opacity .2s;white-space:nowrap;cursor:default}
+.ti:hover{opacity:1}.ti span{font-size:1rem}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* PAIN */
+.pain{padding:120px 0;background:var(--dark)}
+.pain .sec-lbl{color:#5EEAD4}
+.pain h2{color:#fff;margin-bottom:16px}
+.pain-lead{color:rgba(255,255,255,.4);font-size:1.05rem;margin-bottom:64px}
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.pain-card{padding:36px 30px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--rl);transition:background .3s,transform .4s var(--spring),box-shadow .3s}
+.pain-card:hover{background:rgba(255,255,255,.07);transform:translateY(-10px);box-shadow:0 30px 60px rgba(0,0,0,.4)}
+.pico{width:50px;height:50px;border-radius:12px;background:rgba(13,148,136,.18);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:20px;transition:transform .35s var(--spring)}
+.pain-card:hover .pico{transform:scale(1.18) rotate(-8deg)}
+.pain-card h3{color:#fff;margin-bottom:9px}.pain-card p{color:rgba(255,255,255,.38);font-size:.93rem}
+
+/* PROCESS */
+.process{padding:120px 0;background:var(--bg-alt)}
+.proc-hdr{text-align:center;max-width:540px;margin:0 auto 80px}
+.proc-hdr h2{margin-bottom:14px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;position:relative}
+.steps::before{content:'';position:absolute;top:31px;left:calc(16.66% + 20px);right:calc(16.66% + 20px);height:2px;background:linear-gradient(90deg,var(--acc-s),var(--accent),var(--acc-s))}
+.step{text-align:center}
+.step-n{width:62px;height:62px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;margin:0 auto 24px;position:relative;z-index:1;box-shadow:0 0 0 6px var(--acc-s);transition:transform .3s var(--spring),box-shadow .3s}
+.step:hover .step-n{transform:scale(1.13);box-shadow:0 0 0 10px var(--acc-s),0 8px 24px rgba(13,148,136,.3)}
+.step h3{margin-bottom:9px}.step p{font-size:.93rem}
+
+/* FEATURES */
+.features{padding:120px 0}
+.feat-hdr{max-width:580px;margin-bottom:68px}
+.feat-hdr h2{margin-bottom:14px}
+.feat-hdr h2 em{font-style:normal;color:var(--accent)}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feat-card{padding:34px 30px;border:1.5px solid rgba(0,0,0,.08);border-radius:var(--rl);transition:border-color .25s,box-shadow .25s,transform .35s var(--spring);background:#fff}
+.feat-card:hover{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 20px 40px rgba(13,148,136,.08);transform:translateY(-4px)}
+.feat-card.wide{grid-column:span 2}
+.feat-card.dark{background:var(--dark);border-color:var(--dark)}
+.feat-card.dark h3{color:#fff}.feat-card.dark p{color:rgba(255,255,255,.45)}
+.feat-ico{width:50px;height:50px;background:var(--acc-xs);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;margin-bottom:18px;transition:transform .35s var(--spring),background .25s}
+.feat-card.dark .feat-ico{background:rgba(255,255,255,.07)}
+.feat-card:hover .feat-ico{transform:scale(1.1) rotate(-6deg);background:var(--acc-s)}
+.feat-card h3{margin-bottom:9px}.feat-card p{font-size:.93rem}
+.feat-flow{display:flex;flex-direction:column;gap:7px;margin-top:18px}
+.feat-flow-step{display:flex;align-items:center;gap:10px;font-size:.82rem;padding:9px 13px;background:var(--acc-xs);border-radius:9px;color:var(--dark);font-weight:500}
+.feat-card.dark .feat-flow-step{background:rgba(255,255,255,.06);color:rgba(255,255,255,.75)}
+.feat-flow-step .ffs-ico{font-size:1rem;flex-shrink:0}
+.feat-flow-step .ffs-arr{margin-left:auto;color:var(--accent);font-weight:900}
+.feat-tag{display:inline-flex;align-items:center;gap:5px;font-size:.71rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 11px;border-radius:100px;background:var(--acc-s);color:var(--accent);margin-bottom:14px}
+.feat-card.dark .feat-tag{background:rgba(13,148,136,.2);color:#5EEAD4}
+.feat-bubble-row{display:flex;flex-direction:column;gap:6px;margin-top:18px}
+.feat-bubble{font-size:.8rem;padding:8px 12px;border-radius:12px;max-width:88%;line-height:1.5}
+.feat-bubble.left{background:rgba(0,0,0,.06);border-radius:12px 12px 12px 3px;color:var(--dark)}
+.feat-bubble.right{background:var(--accent);color:#fff;align-self:flex-end;border-radius:12px 12px 3px 12px}
+
+/* COMPARISON */
+.comparison{padding:120px 0;background:var(--bg-alt)}
+.cmp-hdr{text-align:center;max-width:520px;margin:0 auto 60px}
+.cmp-hdr h2{margin-bottom:14px}
+.tbl-wrap{border-radius:var(--rl);overflow:hidden;box-shadow:0 4px 50px rgba(0,0,0,.09);overflow-x:auto}
+table{width:100%;border-collapse:collapse;background:#fff;min-width:600px}
+thead{background:var(--dark)}
+thead th{padding:18px 28px;text-align:left;font-size:.86rem;font-weight:700}
+thead th:first-child,thead th:nth-child(2){color:rgba(255,255,255,.45)}
+thead th:nth-child(3){color:var(--accent2)}
+tbody tr{border-bottom:1px solid rgba(0,0,0,.06);transition:background .2s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--acc-xs)}
+td{padding:16px 28px;font-size:.93rem;vertical-align:middle}
+td:first-child{font-weight:700;color:var(--dark)}
+td:nth-child(2){color:var(--muted)}
+td:nth-child(3){font-weight:700;color:var(--accent)}
+.no{color:var(--red);font-weight:700}.yes{color:var(--green);font-weight:700}
+
+/* STATS */
+.stats{padding:80px 0;background:var(--accent)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;text-align:center}
+.stat-n{font-size:clamp(2.1rem,4.2vw,3.8rem);font-weight:900;color:#fff;letter-spacing:-.05em;line-height:1;margin-bottom:8px}
+.stat-l{color:rgba(255,255,255,.7);font-size:.9rem;font-weight:500}
+
+/* TESTIMONIALS */
+.testimonials{padding:120px 0}
+.test-hdr{max-width:500px;margin-bottom:60px}
+.test-hdr h2{margin-bottom:12px}
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+article.tc{padding:30px 26px;background:var(--bg-alt);border:1.5px solid transparent;border-radius:var(--rl);transition:border-color .25s,box-shadow .25s,transform .35s var(--spring)}
+article.tc:hover{border-color:var(--accent);box-shadow:0 16px 40px rgba(13,148,136,.1);transform:translateY(-5px)}
+.stars{color:#F59E0B;font-size:.88rem;letter-spacing:2px;margin-bottom:16px}
+.tc>p{font-size:.93rem;color:var(--dark);line-height:1.65;margin-bottom:20px;font-style:italic}
+.tc-author{display:flex;align-items:center;gap:11px}
+.tc-av{width:38px;height:38px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;flex-shrink:0}
+.tc-nm{font-size:.87rem;font-weight:700;color:var(--dark)}.tc-cl{font-size:.76rem;color:var(--muted)}
+
+/* PRICING */
+.pricing{padding:120px 0}
+.pricing-hdr{text-align:center;max-width:540px;margin:0 auto 72px}
+.pricing-hdr h2{margin-bottom:14px}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
+.plan{padding:36px 32px;border:1.5px solid rgba(0,0,0,.1);border-radius:var(--rl);position:relative;background:#fff;transition:transform .35s var(--spring),box-shadow .3s}
+.plan:hover{transform:translateY(-6px);box-shadow:0 24px 48px rgba(0,0,0,.09)}
+.plan.featured{background:var(--dark);border-color:var(--dark);transform:scale(1.04);box-shadow:0 32px 64px rgba(0,0,0,.2)}
+.plan.featured:hover{transform:scale(1.04) translateY(-6px)}
+.plan-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 16px;border-radius:100px;white-space:nowrap}
+.plan-name{font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.plan.featured .plan-name{color:rgba(255,255,255,.5)}
+.plan-price{margin-bottom:6px}
+.plan-price .amount{font-size:3.2rem;font-weight:900;letter-spacing:-.05em;color:var(--dark);line-height:1}
+.plan.featured .amount{color:#fff}
+.plan-price .per{font-size:.9rem;color:var(--muted);font-weight:500}
+.plan.featured .per{color:rgba(255,255,255,.45)}
+.plan-desc{font-size:.87rem;color:var(--muted);margin-bottom:28px;line-height:1.5}
+.plan.featured .plan-desc{color:rgba(255,255,255,.45)}
+.plan-feats{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.plan-feats li{display:flex;align-items:flex-start;gap:10px;font-size:.9rem;color:var(--dark);line-height:1.45}
+.plan.featured .plan-feats li{color:rgba(255,255,255,.8)}
+.plan-feats li::before{content:'✓';color:var(--accent);font-weight:900;flex-shrink:0;margin-top:1px}
+.plan-feats li.off{color:var(--muted2)}.plan.featured .plan-feats li.off{color:rgba(255,255,255,.25)}
+.plan-feats li.off::before{content:'·';color:var(--muted2)}
+.plan .btn{width:100%;justify-content:center}
+.pricing-note{text-align:center;margin-top:32px;font-size:.83rem;color:var(--muted)}
+.pricing-note span{margin:0 10px}
+.guarantee{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:48px;padding:18px 28px;background:var(--acc-xs);border:1px solid var(--acc-s);border-radius:var(--rl);max-width:500px;margin-left:auto;margin-right:auto}
+.guarantee-ico{font-size:1.6rem;flex-shrink:0}
+.guarantee-text strong{display:block;font-size:.95rem;color:var(--dark);margin-bottom:2px}
+.guarantee-text span{font-size:.82rem;color:var(--muted)}
+
+/* FAQ */
+.faq{padding:120px 0;background:var(--bg-alt)}
+.faq-hdr{text-align:center;max-width:500px;margin:0 auto 60px}
+.faq-hdr h2{margin-bottom:12px}
+.faq-list{max-width:700px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+details{background:#fff;border:1.5px solid rgba(0,0,0,.08);border-radius:var(--r);transition:border-color .25s}
+details[open]{border-color:var(--accent)}
+summary{padding:20px 24px;font-size:.97rem;font-weight:700;color:var(--dark);cursor:pointer;display:flex;justify-content:space-between;align-items:center;list-style:none;user-select:none;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';font-size:1.4rem;font-weight:300;color:var(--accent);transition:transform .3s var(--ease);flex-shrink:0}
+details[open] summary::after{transform:rotate(45deg)}
+.faq-ans{padding:0 24px 20px}.faq-ans p{font-size:.94rem}
+
+/* CTA FINAL */
+.cta-sec{padding:140px 0;background:var(--dark);text-align:center;position:relative;overflow:hidden}
+.cta-sec::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:750px;height:750px;background:radial-gradient(circle,rgba(13,148,136,.17),transparent 65%);border-radius:50%;pointer-events:none;animation:glow 4.5s ease-in-out infinite}
+.cta-sec .sec-lbl{text-align:center;color:#5EEAD4}
+.cta-sec h2{color:#fff;margin-bottom:18px}
+.cta-sec h2 em{font-style:normal;color:var(--accent2)}
+.cta-sec>.container>p{color:rgba(255,255,255,.4);max-width:460px;margin:0 auto 48px;font-size:1.04rem}
+.cta-sec>.container{position:relative;z-index:1}
+.cta-note{margin-top:16px;font-size:.78rem;color:rgba(255,255,255,.28)}
+
+/* FOOTER */
+footer{background:#080808;padding:52px 0 32px}
+.ft-top{display:flex;justify-content:space-between;align-items:flex-start;gap:40px;margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.07)}
+.ft-brand .logo{font-size:1.18rem}.ft-tag{color:rgba(255,255,255,.3);font-size:.8rem;margin-top:7px}
+.ft-links{display:flex;gap:48px}
+.ft-col h4{color:rgba(255,255,255,.5);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;font-weight:700}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.ft-col a{color:rgba(255,255,255,.3);font-size:.83rem;transition:color .2s}
+.ft-col a:hover{color:var(--accent2)}
+.ft-bottom{display:flex;justify-content:space-between;align-items:center}
+.ft-bottom p{color:rgba(255,255,255,.18);font-size:.78rem}
+
+.mobile-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;padding:12px 16px 20px;background:linear-gradient(to top,rgba(250,250,248,1) 60%,rgba(250,250,248,0));pointer-events:none}
+.mobile-cta a{pointer-events:all;width:100%;justify-content:center;box-shadow:0 8px 30px rgba(13,148,136,.35)}
+.hero-alts{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.hero-alts a{font-size:.84rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:color .2s}
+.hero-alts a:hover{color:var(--dark)}
+.hero-alts span{color:rgba(0,0,0,.2)}
+.cta-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
+.btn-outline-w{background:transparent;color:rgba(255,255,255,.75);border:1.5px solid rgba(255,255,255,.25)}
+.btn-outline-w:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.5)}
+
+.rv{opacity:0;transition:opacity .75s var(--ease),transform .75s var(--ease)}
+.rv.up{transform:translateY(44px)}.rv.left{transform:translateX(-44px)}.rv.right{transform:translateX(44px)}.rv.scale{transform:scale(.91)}
+.rv.in{opacity:1!important;transform:none!important}
+.d1{transition-delay:.07s}.d2{transition-delay:.15s}.d3{transition-delay:.23s}.d4{transition-delay:.31s}
+
+@media(max-width:900px){
+  .hero .container{grid-template-columns:1fr}.hero-visual{display:none}
+  .pain-grid,.test-grid{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:1fr}
+  .feat-card.wide{grid-column:span 1}
+  .steps{grid-template-columns:1fr}.steps::before{display:none}
+  .pricing-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+  .plan.featured{transform:none}.plan.featured:hover{transform:translateY(-6px)}
+  .stats-grid{grid-template-columns:1fr 1fr;gap:24px}
+  .ft-top{flex-direction:column}.ft-links{flex-wrap:wrap;gap:28px}
+  .ft-bottom{flex-direction:column;gap:8px;text-align:center}
+  .hero-btns{flex-direction:column}.hero-btns .btn{justify-content:center}
+  .mobile-cta{display:flex}
+}
+@media(max-width:768px){.nav-links{display:none}.nav-toggle{display:flex}.stats-grid{grid-template-columns:1fr}.trust-lbl{display:none}}
+@media(max-width:600px){h1{font-size:2.2rem}.guarantee{flex-direction:column;text-align:center}}
+  </style>
+</head>
+<body>
+
+<div id="pgbar" aria-hidden="true"></div>
+
+<nav class="nav-drawer" id="drawer">
+  <a href="#como-funciona" onclick="closeDrawer()">Cómo funciona</a>
+  <a href="#funcionalidades" onclick="closeDrawer()">Funcionalidades</a>
+  <a href="#precios" onclick="closeDrawer()">Precios</a>
+  <a href="#testimonios" onclick="closeDrawer()">Clientes</a>
+  <a href="#faq" onclick="closeDrawer()">FAQ</a>
+  <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20gratuita%20de%20RecepcIA" class="btn btn-a btn-lg" target="_blank" rel="noopener" onclick="closeDrawer()">💬 Pedir demo →</a>
+</nav>
+
+<header id="hdr">
+  <div class="container">
+    <div class="nav">
+      <a href="/" class="logo">Recepc<em>IA</em></a>
+      <ul class="nav-links">
+        <li><a href="#como-funciona">Cómo funciona</a></li>
+        <li><a href="#funcionalidades">Funcionalidades</a></li>
+        <li><a href="#precios">Precios</a></li>
+        <li><a href="#testimonios">Clientes</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20gratuita%20de%20RecepcIA" class="btn btn-d" target="_blank" rel="noopener" style="flex-shrink:0">💬 Pedir demo →</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="hero-dots" aria-hidden="true"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="badge"><span class="bdot" aria-hidden="true"></span>IA especializada en clínicas dentales 🦷</div>
+      <h1>
+        <span class="w" style="--i:0">Tu</span>&nbsp;<span class="w" style="--i:1">consulta</span>&nbsp;<span class="w" style="--i:2">dental,</span><br>
+        <span class="w" style="--i:3">sin</span>&nbsp;<span class="w" style="--i:4">perder</span>&nbsp;<span class="w c" style="--i:5">ningún</span>&nbsp;<span class="w" style="--i:6">paciente</span>
+      </h1>
+      <p class="hero-p">Diseñada específicamente para clínicas dentales. Gestiona urgencias, agenda limpiezas, blanqueamientos y revisiones, y responde dudas — sin que tú pares el tratamiento.</p>
+      <div class="hero-btns">
+        <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20gratuita%20de%20RecepcIA%20para%20mi%20cl%C3%ADnica%20dental" class="btn btn-d btn-lg btn-glow" target="_blank" rel="noopener">💬 Quiero mi demo gratuita →</a>
+        <a href="#como-funciona" class="btn btn-g btn-lg">Ver cómo funciona</a>
+      </div>
+      <div class="hero-alts">
+        <a href="tel:+34633032985">📞 633 032 985</a>
+      </div>
+      <div class="soc-proof">
+        <div class="sp-avs"><div class="spa">CM</div><div class="spa">LP</div><div class="spa">JS</div></div>
+        <p class="soc-text"><strong>+30 clínicas dentales</strong> ya gestionan urgencias y citas con RecepcIA</p>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="phone-wrap">
+        <div class="phone-glow"></div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-hdr">
+              <span class="ph-back">‹</span>
+              <div class="ph-av">🦷</div>
+              <div><div class="ph-nm">RecepcIA Dental IA</div><div class="ph-st">● En línea ahora</div></div>
+            </div>
+            <div class="phone-msgs">
+              <div class="pm u">Hola, tengo dolor de muelas desde ayer 😖</div>
+              <div class="pm a">¡Hola! Entiendo. ¿Es un dolor agudo o más sordo?</div>
+              <div class="pm u">Agudo, al morder. Bastante fuerte</div>
+              <div class="pm a">Tenemos urgencia hoy a las 16:30 ⚡ ¿Puedes venir?</div>
+              <div class="pm u">Sí! Muchísimas gracias 🙏</div>
+            </div>
+            <div class="phone-inp">
+              <div class="pi-bar">Escribe un mensaje...</div>
+              <div class="pi-btn">➤</div>
+            </div>
+          </div>
+        </div>
+        <div class="fbadge fb1"><span class="fbd g"></span>Urgencia gestionada ⚡</div>
+        <div class="fbadge fb2"><span class="fbd t"></span>Respuesta en 8 seg</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="trust-bar">
+  <div class="trust-track-wrap">
+    <span class="trust-lbl">Compatible con</span>
+    <div class="trust-marquee">
+      <div class="trust-track">
+        <div class="ti"><span>💬</span>WhatsApp</div><div class="ti"><span>📅</span>Google Calendar</div>
+        <div class="ti"><span>📋</span>Clinicalia</div><div class="ti"><span>🏥</span>Doctoralia</div>
+        <div class="ti"><span>📞</span>Llamadas</div><div class="ti"><span>📧</span>Email</div>
+        <div class="ti"><span>🌐</span>Tu web</div><div class="ti"><span>🦷</span>Dentaid</div>
+        <div class="ti"><span>💬</span>WhatsApp</div><div class="ti"><span>📅</span>Google Calendar</div>
+        <div class="ti"><span>📋</span>Clinicalia</div><div class="ti"><span>🏥</span>Doctoralia</div>
+        <div class="ti"><span>📞</span>Llamadas</div><div class="ti"><span>📧</span>Email</div>
+        <div class="ti"><span>🌐</span>Tu web</div><div class="ti"><span>🦷</span>Dentaid</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="pain">
+  <div class="container">
+    <span class="sec-lbl rv up">El problema</span>
+    <h2 class="rv up d1">Lo que le cuesta dinero<br>a tu clínica dental cada día</h2>
+    <p class="pain-lead rv up d2">Un dentista no puede coger el teléfono mientras trabaja. Pero el paciente no espera.</p>
+    <div class="pain-grid">
+      <div class="pain-card rv up d1">
+        <div class="pico">📞</div>
+        <h3>Llamadas durante los procedimientos</h3>
+        <p>Cuando estás con un paciente en el sillón, el teléfono no para. Cada llamada perdida es un paciente que llama a la clínica de al lado.</p>
+      </div>
+      <div class="pain-card rv up d2">
+        <div class="pico">🚨</div>
+        <h3>Urgencias fuera del horario</h3>
+        <p>El dolor dental no entiende de festivos ni fines de semana. Sin IA, esas urgencias se van a urgencias hospitalarias o a tu competencia.</p>
+      </div>
+      <div class="pain-card rv up d3">
+        <div class="pico">💬</div>
+        <h3>Pacientes que preguntan precios</h3>
+        <p>El 60 % de los pacientes potenciales preguntan el coste antes de decidir. Sin respuesta en menos de 5 minutos, el interés desaparece.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="como-funciona">
+  <div class="container">
+    <div class="proc-hdr rv up">
+      <span class="sec-lbl">El proceso</span>
+      <h2>Tu clínica dental, operativa en 48 horas</h2>
+      <p>Sin instalar nada. Sin formación interminable. En dos días tienes tu recepcionista dental IA funcionando.</p>
+    </div>
+    <div class="steps">
+      <div class="step rv up d1"><div class="step-n">1</div><h3>Cuéntanos tu clínica</h3><p>Una llamada de 30 minutos. Tratamientos, tarifas, horarios y cómo quieres gestionar urgencias.</p></div>
+      <div class="step rv up d2"><div class="step-n">2</div><h3>Configuramos tu IA dental</h3><p>La entrenamos con toda la información de tu clínica y la conectamos a tus canales en 48 horas.</p></div>
+      <div class="step rv up d3"><div class="step-n">3</div><h3>Empieza a captar pacientes</h3><p>Gestiona llamadas, WhatsApp y urgencias desde el primer día. Tú solo te ocupas de los tratamientos.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="funcionalidades">
+  <div class="container">
+    <div class="feat-hdr rv up">
+      <span class="sec-lbl">Funcionalidades</span>
+      <h2>Todo lo que hace<br>una recepcionista, <em>y más</em></h2>
+      <p>No es un chatbot que responde FAQs. Es una recepcionista completa que gestiona el ciclo de vida de cada paciente de principio a fin.</p>
+    </div>
+    <div class="feat-grid">
+
+      <!-- AGENDA WIDE -->
+      <div class="feat-card wide rv up d1">
+        <div class="feat-tag">🗓️ Núcleo del sistema</div>
+        <h3>Agenda de citas inteligente 24/7</h3>
+        <p>Reserva, modifica y cancela citas automáticamente por WhatsApp o llamada. Muestra disponibilidad de los próximos 28 días, gestiona varios dentistas y nunca solapas huecos. El paciente elige su hora en menos de 2 minutos, a cualquier hora del día.</p>
+        <div class="feat-flow">
+          <div class="feat-flow-step"><span class="ffs-ico">💬</span> Paciente escribe: <strong>"Quiero cita para limpieza la semana que viene"</strong><span class="ffs-arr">›</span></div>
+          <div class="feat-flow-step"><span class="ffs-ico">🤖</span> IA muestra huecos disponibles y pregunta el tratamiento<span class="ffs-arr">›</span></div>
+          <div class="feat-flow-step"><span class="ffs-ico">✅</span> Cita confirmada, Google Calendar actualizado, clínica notificada</div>
+        </div>
+      </div>
+
+      <!-- CONFIRMACION -->
+      <div class="feat-card rv up d2">
+        <div class="feat-ico">✅</div>
+        <h3>Confirmación y gestión de ausencias</h3>
+        <p>24h antes de la cita, el paciente recibe un mensaje automático pidiendo confirmación. Si responde CANCELO, la cita se libera y la clínica recibe un aviso inmediato para cubrir el hueco. Reduce los no-shows hasta un 80 %.</p>
+        <div class="feat-bubble-row">
+          <div class="feat-bubble left">👋 Mañana tienes limpieza a las 10h. ¿Confirmas? Responde CONFIRMO o CANCELO</div>
+          <div class="feat-bubble right">CONFIRMO ✅</div>
+          <div class="feat-bubble left">¡Perfecto! Te esperamos mañana 😊</div>
+        </div>
+      </div>
+
+      <!-- ESCALADO HUMANO -->
+      <div class="feat-card dark rv up d3">
+        <div class="feat-ico">🧑‍⚕️</div>
+        <h3>Escalado humano inteligente</h3>
+        <p>Cuando el paciente tiene una situación que la IA no puede resolver sola — una urgencia crítica, una queja, o una petición compleja — avisa al dentista o recepcionista en tiempo real por WhatsApp y pasa el control sin que el paciente lo note.</p>
+        <div class="feat-flow">
+          <div class="feat-flow-step"><span class="ffs-ico">⚠️</span> Paciente describe síntoma grave o situación delicada</div>
+          <div class="feat-flow-step"><span class="ffs-ico">📲</span> IA avisa al dentista al instante con el contexto completo</div>
+          <div class="feat-flow-step"><span class="ffs-ico">🤝</span> El dentista toma el control sin interrumpir la experiencia</div>
+        </div>
+      </div>
+
+      <!-- LLAMADAS DE VOZ -->
+      <div class="feat-card rv up d1">
+        <div class="feat-ico">📞</div>
+        <h3>Llamadas de voz con IA</h3>
+        <p>No solo WhatsApp. RecepcIA también atiende llamadas telefónicas con voz natural generada por IA. Responde, triagea urgencias, agenda citas y transfiere al dentista si es necesario — sin que el paciente note que habla con una IA.</p>
+      </div>
+
+      <!-- RESEÑAS GOOGLE -->
+      <div class="feat-card rv up d2">
+        <div class="feat-ico">⭐</div>
+        <h3>Reseñas Google en piloto automático</h3>
+        <p>Al día siguiente de cada visita, el paciente recibe una encuesta de satisfacción del 1 al 5. Si valora 4 o 5 estrellas, recibe el enlace directo a tu ficha de Google para dejar la reseña pública. Las valoraciones bajas van a ti, no a internet.</p>
+      </div>
+
+      <!-- PANEL DE CITAS -->
+      <div class="feat-card rv up d3">
+        <div class="feat-ico">📋</div>
+        <h3>Panel de citas para la clínica</h3>
+        <p>Accede desde cualquier dispositivo a todas las citas confirmadas, pacientes en lista de espera y el historial de conversaciones. Protegido con contraseña. Sin instalar nada, desde el navegador.</p>
+      </div>
+
+      <!-- HISTORIAL PACIENTE -->
+      <div class="feat-card rv up d1">
+        <div class="feat-ico">🧠</div>
+        <h3>Historial del paciente</h3>
+        <p>El agente recuerda los tratamientos anteriores de cada paciente. Si Juan José vuelve a escribir, sabe que ya tuvo una limpieza en marzo y una revisión en octubre. La conversación es personalizada desde el primer mensaje.</p>
+      </div>
+
+      <!-- REVISION 6 MESES -->
+      <div class="feat-card rv up d2">
+        <div class="feat-ico">🔄</div>
+        <h3>Recordatorio de revisión a los 6 meses</h3>
+        <p>A los 6 meses de la última visita, el paciente recibe un WhatsApp automático invitándole a su revisión periódica. Sin que tú tengas que hacer nada. El paciente vuelve solo. La clínica llena su agenda sin esfuerzo.</p>
+      </div>
+
+      <!-- REACTIVACION WIDE -->
+      <div class="feat-card rv up d3">
+        <div class="feat-ico">📣</div>
+        <h3>Reactivación a los 12 meses</h3>
+        <p>Si un paciente lleva un año sin volver, recibe un mensaje personalizado para reactivarle. Recupera pacientes que dabas por perdidos, en piloto automático.</p>
+      </div>
+
+      <!-- INFORME MENSUAL WIDE -->
+      <div class="feat-card wide dark rv up d1">
+        <div class="feat-tag">📊 Visibilidad total</div>
+        <h3>Informe mensual automático</h3>
+        <p>El día 1 de cada mes recibes por WhatsApp un resumen completo del mes anterior: citas gestionadas, nuevos pacientes, pacientes recurrentes y valoración media de las encuestas. Sin abrir ningún dashboard. Directo a tu móvil.</p>
+        <div class="feat-flow" style="margin-top:22px">
+          <div class="feat-flow-step"><span class="ffs-ico">📅</span> <strong>Citas gestionadas:</strong> 47 este mes</div>
+          <div class="feat-flow-step"><span class="ffs-ico">🆕</span> <strong>Nuevos pacientes:</strong> 12 · <strong>Recurrentes:</strong> 35</div>
+          <div class="feat-flow-step"><span class="ffs-ico">⭐</span> <strong>Valoración media:</strong> 4.8 / 5 (31 encuestas)</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="comparison">
+  <div class="container">
+    <div class="cmp-hdr rv up">
+      <span class="sec-lbl">Comparativa</span>
+      <h2>Tu equipo más IA: una clínica sin límites</h2>
+      <p>RecepcIA no sustituye a nadie — libera a tu equipo de las tareas repetitivas para que se centre en lo que importa: los pacientes.</p>
+    </div>
+    <div class="tbl-wrap rv scale">
+      <table>
+        <thead><tr><th>Situación</th><th>Sin RecepcIA</th><th>Con RecepcIA ✓</th></tr></thead>
+        <tbody>
+          <tr><td>Urgencias fuera de horario</td><td>Sin respuesta hasta el día siguiente</td><td>Atendidas al instante, 24/7</td></tr>
+          <tr><td>Cobertura en fines de semana y festivos</td><td class="no">✗ Sin cobertura</td><td class="yes">✓ Siempre disponible</td></tr>
+          <tr><td>Tiempo de respuesta a un paciente</td><td>Minutos u horas, según la carga</td><td>Menos de 10 segundos</td></tr>
+          <tr><td>Recordatorios de cita y confirmación</td><td>Manual o no se hace</td><td class="yes">✓ Automático, sin esfuerzo</td></tr>
+          <tr><td>Seguimiento post-visita y reseñas</td><td class="no">✗ Se pierde el paciente</td><td class="yes">✓ WhatsApp automático al día siguiente</td></tr>
+          <tr><td>Pacientes que no vuelven en 6–12 meses</td><td class="no">✗ Se dan por perdidos</td><td class="yes">✓ Reactivación automática</td></tr>
+          <tr><td>Tasa de no-shows</td><td>25 % – 35 %</td><td>Menos del 8 %</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="stats" id="stats-sec">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="rv scale d1"><div class="stat-n" id="s1" data-t="68" data-p="+" data-s="%">+68%</div><div class="stat-l">más citas al mes</div></div>
+      <div class="rv scale d2"><div class="stat-n" id="s2" data-t="80" data-p="−" data-s="%">−80%</div><div class="stat-l">reducción de ausencias</div></div>
+      <div class="rv scale d3"><div class="stat-n">24/7</div><div class="stat-l">gestión de urgencias</div></div>
+      <div class="rv scale d4"><div class="stat-n" id="s3" data-t="48" data-p="" data-s="h">48h</div><div class="stat-l">para estar operativa</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials" id="testimonios">
+  <div class="container">
+    <div class="test-hdr rv up">
+      <span class="sec-lbl">Testimonios</span>
+      <h2>Lo que dicen<br>las clínicas dentales</h2>
+    </div>
+    <div class="test-grid">
+      <article class="tc rv up d1">
+        <div class="stars">★★★★★</div>
+        <p>"Teníamos urgencias que se iban a Urgencias hospitalarias porque nadie atendía el teléfono el fin de semana. Ahora las gestionamos todas con la IA."</p>
+        <div class="tc-author"><div class="tc-av">CM</div><div><div class="tc-nm">Dr. Carlos Mendoza</div><div class="tc-cl">Clínica Dental Mendoza · Sevilla</div></div></div>
+      </article>
+      <article class="tc rv up d2">
+        <div class="stars">★★★★★</div>
+        <p>"Mis pacientes de ortodoncia tienen mil dudas entre citas. Ahora la IA las resuelve todas al instante y yo no tengo que estar pendiente del móvil."</p>
+        <div class="tc-author"><div class="tc-av" style="background:#5EEAD4;color:var(--dark)">LP</div><div><div class="tc-nm">Dra. Laura Pérez</div><div class="tc-cl">Ortodoncia Pérez · Bilbao</div></div></div>
+      </article>
+      <article class="tc rv up d3">
+        <div class="stars">★★★★★</div>
+        <p>"Recuperamos tres pacientes al mes que antes perdíamos por no contestar a tiempo. Con una sola cita recuperada ya se paga el servicio."</p>
+        <div class="tc-author"><div class="tc-av" style="background:#0F766E">JS</div><div><div class="tc-nm">Dr. Javier Santos</div><div class="tc-cl">Centro Dental Santos · Zaragoza</div></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="precios">
+  <div class="container">
+    <div class="pricing-hdr rv up">
+      <span class="sec-lbl">Precios</span>
+      <h2>Transparente desde el primer día</h2>
+      <p>Sin letra pequeña. Sin permanencia. Cancela cuando quieras.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="plan rv up d1">
+        <div class="plan-name">Básico</div>
+        <div class="plan-price"><span class="amount">99</span><span class="per"> €/mes</span></div>
+        <p class="plan-desc">Para clínicas que quieren automatizar la recepción por WhatsApp y no perder ni una cita.</p>
+        <ul class="plan-feats">
+          <li>💬 WhatsApp 24/7</li>
+          <li>Agenda de citas automática</li>
+          <li>Confirmación y gestión de ausencias</li>
+          <li>Escalado humano al dentista</li>
+          <li>Responde precios y FAQ</li>
+          <li>Panel de citas</li>
+          <li>Configuración en 48 h</li>
+          <li class="off">Llamadas de voz</li>
+          <li class="off">Reseñas Google · Historial · Informe</li>
+          <li class="off">Instagram</li>
+        </ul>
+        <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20del%20plan%20B%C3%A1sico%20de%20RecepcIA" class="btn btn-g" target="_blank" rel="noopener">💬 Pedir demo →</a>
+      </div>
+      <div class="plan featured rv up d2">
+        <div class="plan-badge">Más elegido</div>
+        <div class="plan-name">Pro Dental</div>
+        <div class="plan-price"><span class="amount">179</span><span class="per"> €/mes</span></div>
+        <p class="plan-desc">WhatsApp y llamadas de voz. Más todas las funciones de fidelización que hacen crecer tu clínica.</p>
+        <ul class="plan-feats">
+          <li>💬 WhatsApp 24/7</li>
+          <li>📞 Llamadas de voz con IA</li>
+          <li>Todo lo del plan Básico</li>
+          <li>⭐ Captación de reseñas Google</li>
+          <li>🔄 Revisión automática a los 6 meses</li>
+          <li>📣 Reactivación a los 12 meses</li>
+          <li>🧠 Historial del paciente</li>
+          <li>📊 Informe mensual automático</li>
+          <li class="off">Instagram DMs</li>
+          <li class="off">Múltiples sedes</li>
+        </ul>
+        <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20del%20plan%20Pro%20de%20RecepcIA" class="btn btn-a btn-glow" target="_blank" rel="noopener">💬 Empezar ahora →</a>
+      </div>
+      <div class="plan rv up d3">
+        <div class="plan-name">Clínica+</div>
+        <div class="plan-price"><span class="amount">299</span><span class="per"> €/mes</span></div>
+        <p class="plan-desc">Para centros dentales que quieren cubrir todos los canales y gestionar varias sedes o dentistas.</p>
+        <ul class="plan-feats">
+          <li>💬 WhatsApp 24/7</li>
+          <li>📞 Llamadas de voz con IA</li>
+          <li>📸 Instagram DMs</li>
+          <li>Todo lo del plan Pro</li>
+          <li>Múltiples dentistas y sedes</li>
+          <li>Soporte prioritario dedicado</li>
+        </ul>
+        <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20el%20plan%20Cl%C3%ADnica%2B%20de%20RecepcIA" class="btn btn-d" target="_blank" rel="noopener">💬 Contactar →</a>
+      </div>
+    </div>
+    <p class="pricing-note rv up"><span>✓ Sin permanencia</span><span>✓ Cancela cuando quieras</span><span>✓ Prueba 14 días gratis</span></p>
+    <div class="guarantee rv up">
+      <div class="guarantee-ico">🛡️</div>
+      <div class="guarantee-text">
+        <strong>Garantía de satisfacción de 30 días</strong>
+        <span>Si en 30 días no ves resultados, te devolvemos el dinero. Sin preguntas.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="faq-hdr rv up"><span class="sec-lbl">Preguntas frecuentes</span><h2>Todo lo que necesitas saber</h2><p>Resolvemos tus dudas antes de empezar.</p></div>
+    <div class="faq-list rv up d1">
+      <details><summary>¿Puede gestionar urgencias dentales fuera del horario?</summary><div class="faq-ans"><p>Sí. Triagea el dolor del paciente, da indicaciones básicas de primeros auxilios si es necesario y agenda la primera cita disponible. Si la urgencia requiere atención inmediata, informa al paciente de los recursos disponibles.</p></div></details>
+      <details><summary>¿Funciona con Clinicalia, Dentaid u otros software dentales?</summary><div class="faq-ans"><p>Sí. Nos integramos con los principales sistemas de gestión dental. Si usas uno diferente, lo evaluamos en la llamada inicial sin compromiso.</p></div></details>
+      <details><summary>¿Cómo gestiona los presupuestos de tratamientos complejos?</summary><div class="faq-ans"><p>La IA informa de los rangos de precio de tus tratamientos y deja claro que el presupuesto exacto se hace en consulta. Cualifica al paciente y agenda la visita de valoración.</p></div></details>
+      <details><summary>¿Puede diferenciar entre una urgencia real y una consulta normal?</summary><div class="faq-ans"><p>Sí. Está entrenada para hacer las preguntas correctas y clasificar la urgencia. Un dolor agudo al morder tiene prioridad diferente a preguntar por el precio de una limpieza.</p></div></details>
+      <details><summary>¿Hay permanencia o compromiso mínimo?</summary><div class="faq-ans"><p>No hay permanencia. Cancela en cualquier momento. Además tienes 14 días de prueba gratuita y garantía de 30 días.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<section class="cta-sec">
+  <div class="container rv up">
+    <span class="sec-lbl">Empieza hoy</span>
+    <h2>¿Tu clínica dental lista para<br>nunca perder un <em>paciente</em>?</h2>
+    <p>Cuéntanos sobre tu consulta. En 20 minutos te mostramos cómo funciona, sin compromiso.</p>
+    <div class="cta-btns">
+      <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20gratuita%20de%20RecepcIA%20para%20mi%20cl%C3%ADnica%20dental" class="btn btn-a btn-lg btn-glow" target="_blank" rel="noopener">💬 WhatsApp</a>
+      <a href="tel:+34633032985" class="btn btn-outline-w btn-lg">📞 633 032 985</a>
+    </div>
+    <p class="cta-note">Sin permanencia &nbsp;·&nbsp; Prueba 14 días gratis &nbsp;·&nbsp; Garantía 30 días</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="ft-top">
+      <div class="ft-brand"><div class="logo">Recepc<em>IA</em></div><p class="ft-tag">Recepcionista IA especializada<br>en clínicas dentales</p></div>
+      <div class="ft-links">
+        <div class="ft-col"><h4>Producto</h4><ul><li><a href="#como-funciona">Cómo funciona</a></li><li><a href="#funcionalidades">Funcionalidades</a></li><li><a href="#precios">Precios</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+        <div class="ft-col"><h4>Especialidades</h4><ul><li><a href="dental.html">Clínicas dentales</a></li><li><a href="estetica.html">Clínicas estéticas</a></li><li><a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20gratuita%20de%20RecepcIA" target="_blank" rel="noopener">Demo gratuita</a></li></ul></div>
+        <div class="ft-col"><h4>Legal</h4><ul><li><a href="#">Privacidad</a></li><li><a href="#">Términos de uso</a></li><li><a href="#">Cookies</a></li></ul></div>
+      </div>
+    </div>
+    <div class="ft-bottom"><p>© 2026 RecepcIA · Todos los derechos reservados</p><p>Hecho con IA · Para clínicas con visión</p></div>
+  </div>
+</footer>
+
+<div class="mobile-cta"><a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20gratuita%20de%20RecepcIA" class="btn btn-a btn-lg" target="_blank" rel="noopener">💬 Quiero mi demo gratuita →</a></div>
+
+<script>
+const pgbar=document.getElementById('pgbar');
+window.addEventListener('scroll',()=>{pgbar.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';},{passive:true});
+const hdr=document.getElementById('hdr');
+window.addEventListener('scroll',()=>{hdr.classList.toggle('scrolled',window.scrollY>40);},{passive:true});
+const toggle=document.getElementById('navToggle'),drawer=document.getElementById('drawer');
+function closeDrawer(){toggle.classList.remove('open');drawer.classList.remove('open');toggle.setAttribute('aria-expanded','false');document.body.style.overflow='';}
+toggle.addEventListener('click',()=>{const o=drawer.classList.toggle('open');toggle.classList.toggle('open',o);toggle.setAttribute('aria-expanded',o);document.body.style.overflow=o?'hidden':'';});
+drawer.addEventListener('click',e=>{if(e.target===drawer)closeDrawer();});
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();closeDrawer();t.scrollIntoView({behavior:'smooth',block:'start'});}});});
+const rvObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:0.11});
+document.querySelectorAll('.rv').forEach(el=>rvObs.observe(el));
+function countUp(el){const target=+el.dataset.t,prefix=el.dataset.p||'',suffix=el.dataset.s||'';const dur=2000,t0=performance.now();(function tick(now){const p=Math.min((now-t0)/dur,1);el.textContent=prefix+Math.round((1-Math.pow(1-p,3))*target)+suffix;if(p<1)requestAnimationFrame(tick);})(t0);}
+const statsObs=new IntersectionObserver(es=>{if(es[0].isIntersecting){['s1','s2','s3'].forEach(id=>{const el=document.getElementById(id);if(el)countUp(el);});statsObs.disconnect();}},{threshold:0.5});
+const statsEl=document.getElementById('stats-sec');if(statsEl)statsObs.observe(statsEl);
+const mc=document.querySelector('.mobile-cta'),ft=document.querySelector('footer');
+if(mc&&ft)new IntersectionObserver(es=>{mc.style.display=es[0].isIntersecting?'none':'';},{threshold:0}).observe(ft);
+</script>
+</body>
+</html>

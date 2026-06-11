@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>RecepcIA — Recepcionista Virtual con IA para Clínicas Estéticas y Dentales</title>
+  <meta name="description" content="Automatiza la recepción de tu clínica estética o dental con inteligencia artificial. Agenda citas 24/7, reduce ausencias un 80 % y nunca pierdas un paciente. Lista en 48 horas." />
+  <meta name="keywords" content="recepcionista virtual IA, clínica estética inteligencia artificial, clínica dental automatización, agenda citas automática clínica, asistente virtual clínica dental, recepcionista IA España, RecepcIA" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://recepcia.health" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://recepcia.health" />
+  <meta property="og:title" content="RecepcIA — Recepcionista Virtual con IA para Clínicas" />
+  <meta property="og:description" content="Agenda citas 24/7, responde al instante y nunca pierdas un paciente. La IA recepcionista para clínicas estéticas y dentales." />
+  <meta property="og:locale" content="es_ES" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="RecepcIA — Recepcionista Virtual con IA" />
+  <meta name="twitter:description" content="Tu clínica estética o dental, atendiendo pacientes las 24 horas con inteligencia artificial." />
+
+  <script type="application/ld+json">
+  [
+    {
+      "@context":"https://schema.org","@type":"Service",
+      "name":"RecepcIA — Recepcionista Virtual con IA",
+      "description":"Automatización de la recepción para clínicas estéticas y dentales. Agenda de citas 24/7, atención multicanal y reducción de ausencias.",
+      "provider":{"@type":"Organization","name":"RecepcIA","url":"https://recepcia.health"},
+      "serviceType":"Automatización con Inteligencia Artificial",
+      "areaServed":{"@type":"Country","name":"España"},
+      "audience":{"@type":"BusinessAudience","audienceType":"Clínicas estéticas y dentales"}
+    },
+    {
+      "@context":"https://schema.org","@type":"FAQPage",
+      "mainEntity":[
+        {"@type":"Question","name":"¿Funciona con mi software de gestión?","acceptedAnswer":{"@type":"Answer","text":"Sí. Nos integramos con Clinicalia, Doctoralia, iClinic, Google Calendar y muchos más."}},
+        {"@type":"Question","name":"¿En cuánto tiempo estará lista?","acceptedAnswer":{"@type":"Answer","text":"48 horas desde la llamada inicial."}},
+        {"@type":"Question","name":"¿Hay permanencia?","acceptedAnswer":{"@type":"Answer","text":"No hay permanencia. Cancela cuando quieras."}}
+      ]
+    }
+  ]
+  </script>
+
+  <style>
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#FAFAF8;--bg-alt:#F2F0EA;--dark:#0C0C0C;--dark2:#1A1A1A;
+  --muted:#6B6B6B;--muted2:#A0A0A0;
+  --accent:#0D9488;--accent2:#14B8A6;--acc-s:#CCFBF1;--acc-xs:#EDFAF8;
+  --white:#FFFFFF;--red:#EF4444;--green:#22C55E;
+  --r:14px;--rl:24px;--ease:cubic-bezier(.4,0,.2,1);--spring:cubic-bezier(.34,1.56,.64,1)
+}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--dark);line-height:1.6;overflow-x:hidden}
+h1,h2,h3,h4{font-weight:800;letter-spacing:-.03em;line-height:1.1}
+h1{font-size:clamp(2.3rem,5.2vw,4.6rem)}
+h2{font-size:clamp(1.9rem,3.8vw,3.3rem)}
+h3{font-size:1.12rem}
+p{color:var(--muted);font-size:1rem;line-height:1.75}
+a{text-decoration:none;color:inherit}
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* ── PROGRESS BAR ── */
+#pgbar{position:fixed;top:0;left:0;z-index:600;height:3px;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2),#A7F3D0);transition:width .08s linear;pointer-events:none}
+
+/* ── NAV ── */
+header{position:fixed;top:3px;left:0;right:0;z-index:400;padding:15px 0;background:rgba(250,250,248,.93);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.06);transform:translateY(-110%);animation:navIn .65s .1s var(--ease) forwards;transition:box-shadow .3s}
+header.scrolled{box-shadow:0 4px 30px rgba(0,0,0,.08)}
+@keyframes navIn{to{transform:none}}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-size:1.28rem;font-weight:900;letter-spacing:-.05em;flex-shrink:0}
+.logo em{font-style:normal;color:var(--accent)}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{font-size:.87rem;font-weight:600;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--dark)}
+
+/* hamburger */
+.nav-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;z-index:500}
+.nav-toggle span{display:block;width:22px;height:2px;background:var(--dark);border-radius:2px;transition:transform .3s var(--ease),opacity .3s}
+.nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle.open span:nth-child(2){opacity:0}
+.nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* mobile drawer */
+.nav-drawer{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;transform:translateX(100%);transition:transform .4s var(--ease)}
+.nav-drawer.open{transform:none}
+.nav-drawer a{font-size:1.6rem;font-weight:800;color:var(--dark);letter-spacing:-.03em}
+.nav-drawer a:hover{color:var(--accent)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:12px 26px;border-radius:100px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;position:relative;overflow:hidden;transition:transform .2s var(--spring),box-shadow .25s,background .2s,color .2s}
+.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.22) 50%,transparent 70%);transform:translateX(-100%);transition:transform .55s var(--ease)}
+.btn:hover::after{transform:translateX(100%)}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(.97)}
+.btn-d{background:var(--dark);color:#fff}
+.btn-d:hover{background:var(--accent);box-shadow:0 10px 30px rgba(13,148,136,.3)}
+.btn-a{background:var(--accent);color:#fff}
+.btn-a:hover{background:var(--accent2);box-shadow:0 10px 30px rgba(13,148,136,.3)}
+.btn-g{background:transparent;color:var(--dark);border:1.5px solid rgba(0,0,0,.14)}
+.btn-g:hover{background:var(--dark);color:#fff}
+.btn-lg{padding:17px 42px;font-size:.97rem}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(13,148,136,0)}50%{box-shadow:0 0 0 14px rgba(13,148,136,.14)}}
+.btn-glow{animation:glow 2.8s ease-in-out infinite}
+.btn-glow:hover{animation:none}
+
+/* ── SECTION LABEL ── */
+.sec-lbl{display:block;font-size:.74rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+
+/* ── HERO ── */
+.hero{min-height:100svh;padding:130px 0 80px;position:relative;overflow:hidden;display:flex;align-items:center}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 72% 18%,rgba(13,148,136,.12) 0%,transparent 52%),radial-gradient(ellipse at 8% 80%,rgba(13,148,136,.07) 0%,transparent 48%),var(--bg)}
+.hero-dots{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle,rgba(13,148,136,.11) 1px,transparent 1px);background-size:36px 36px;mask-image:radial-gradient(ellipse 55% 65% at 85% 42%,black 20%,transparent);-webkit-mask-image:radial-gradient(ellipse 55% 65% at 85% 42%,black 20%,transparent)}
+.hero .container{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.hero-content{position:relative;z-index:1}
+
+.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;background:var(--acc-s);color:var(--accent);border-radius:100px;font-size:.79rem;font-weight:700;letter-spacing:.04em;margin-bottom:30px;opacity:0;transform:scale(.85) translateY(8px);animation:popIn .65s .35s var(--spring) forwards}
+@keyframes popIn{to{opacity:1;transform:scale(1) translateY(0)}}
+.bdot{width:7px;height:7px;background:var(--accent);border-radius:50%;flex-shrink:0;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+.hero h1{margin-bottom:22px}
+.w{display:inline-block;opacity:0;transform:translateY(26px);animation:wIn .52s calc(.52s + var(--i) * .09s) var(--ease) forwards}
+.w.c{color:var(--accent)}
+@keyframes wIn{to{opacity:1;transform:none}}
+
+.hero-p{font-size:1.08rem;max-width:510px;margin-bottom:40px;opacity:0;transform:translateY(12px);animation:wIn .6s 1s var(--ease) forwards}
+.hero-btns{display:flex;gap:13px;flex-wrap:wrap;margin-bottom:40px;opacity:0;transform:translateY(10px);animation:wIn .6s 1.12s var(--ease) forwards}
+
+.soc-proof{display:flex;align-items:center;gap:12px;opacity:0;animation:wIn .6s 1.28s var(--ease) forwards}
+.sp-avs{display:flex}
+.spa{width:30px;height:30px;border-radius:50%;border:2.5px solid var(--bg);background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.62rem;font-weight:800;margin-left:-8px}
+.spa:first-child{margin-left:0}
+.spa:nth-child(2){background:#5EEAD4}
+.spa:nth-child(3){background:#0F766E}
+.soc-text{font-size:.8rem;color:var(--muted)}
+.soc-text strong{color:var(--dark)}
+
+/* ── PHONE ── */
+.hero-visual{display:flex;justify-content:center;align-items:center;position:relative;z-index:1;opacity:0;transform:translateY(20px);animation:wIn .85s .65s var(--ease) forwards}
+.phone-wrap{position:relative;padding:44px 64px}
+.phone-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;background:radial-gradient(circle,rgba(13,148,136,.22),transparent 68%);border-radius:50%;filter:blur(18px);animation:glow 3.5s ease-in-out infinite}
+.phone{width:265px;background:#111;border-radius:44px;padding:13px;box-shadow:0 0 0 1px rgba(255,255,255,.1),0 60px 120px rgba(0,0,0,.45),0 20px 40px rgba(13,148,136,.18);transform:rotate(-4deg);animation:phoneFloat 5s ease-in-out infinite}
+@keyframes phoneFloat{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(-4deg) translateY(-14px)}}
+.phone-notch{width:76px;height:20px;background:#111;border-radius:0 0 12px 12px;margin:0 auto 8px;position:relative;z-index:2}
+.phone-screen{background:#1C1C1E;border-radius:32px;overflow:hidden;height:490px;display:flex;flex-direction:column}
+.phone-hdr{background:#252527;padding:13px 15px;display:flex;align-items:center;gap:9px;flex-shrink:0}
+.ph-back{color:var(--accent);font-size:.85rem;font-weight:700}
+.ph-av{width:33px;height:33px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.82rem;flex-shrink:0}
+.ph-nm{font-size:.8rem;font-weight:700;color:#fff;line-height:1.2}
+.ph-st{font-size:.63rem;color:#4ADE80;font-weight:600}
+.phone-msgs{flex:1;padding:13px 11px;display:flex;flex-direction:column;gap:7px;overflow:hidden}
+.pm{font-size:.74rem;border-radius:13px;padding:9px 12px;max-width:84%;line-height:1.5;opacity:0}
+.pm.u{background:rgba(255,255,255,.08);color:rgba(255,255,255,.75);align-self:flex-start;transform:translateX(-10px);animation:pmL .4s var(--ease) forwards}
+.pm.a{background:var(--accent);color:#fff;align-self:flex-end;transform:translateX(10px);animation:pmR .4s var(--ease) forwards;border-radius:13px 13px 3px 13px}
+.pm:nth-child(1){animation-delay:1.1s}.pm:nth-child(2){animation-delay:2.5s}.pm:nth-child(3){animation-delay:3.9s}.pm:nth-child(4){animation-delay:5.2s}.pm:nth-child(5){animation-delay:6.5s}
+@keyframes pmL{to{opacity:1;transform:none}}
+@keyframes pmR{to{opacity:1;transform:none}}
+.phone-inp{background:#252527;padding:11px 13px;display:flex;align-items:center;gap:9px;flex-shrink:0}
+.pi-bar{flex:1;background:rgba(255,255,255,.07);border-radius:18px;padding:8px 13px;font-size:.7rem;color:rgba(255,255,255,.28)}
+.pi-btn{width:30px;height:30px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+
+.fbadge{position:absolute;background:#fff;border-radius:13px;padding:9px 13px;box-shadow:0 8px 24px rgba(0,0,0,.13);font-size:.76rem;font-weight:700;display:flex;align-items:center;gap:7px;white-space:nowrap;color:var(--dark)}
+.fb1{top:10px;right:0;animation:fbf 4s ease-in-out infinite}
+.fb2{bottom:55px;left:0;animation:fbf 4s 1.8s ease-in-out infinite}
+.fbd{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.fbd.g{background:var(--green)}.fbd.t{background:var(--accent)}
+@keyframes fbf{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+/* ── TRUST BAR (marquee) ── */
+.trust-bar{padding:0;border-top:1px solid rgba(0,0,0,.07);border-bottom:1px solid rgba(0,0,0,.07);overflow:hidden}
+.trust-track-wrap{display:flex;align-items:center;padding:22px 0;gap:0}
+.trust-lbl{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);white-space:nowrap;padding:0 28px;flex-shrink:0;border-right:1px solid rgba(0,0,0,.08)}
+.trust-marquee{flex:1;overflow:hidden}
+.trust-track{display:flex;gap:0;animation:marquee 22s linear infinite;width:max-content}
+.trust-track:hover{animation-play-state:paused}
+.ti{display:flex;align-items:center;gap:7px;font-size:.84rem;font-weight:700;color:var(--muted);padding:0 32px;opacity:.55;transition:opacity .2s;white-space:nowrap;cursor:default}
+.ti:hover{opacity:1}
+.ti span{font-size:1rem}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── PAIN ── */
+.pain{padding:120px 0;background:var(--dark)}
+.pain .sec-lbl{color:#5EEAD4}
+.pain h2{color:#fff;margin-bottom:16px}
+.pain-lead{color:rgba(255,255,255,.4);font-size:1.05rem;margin-bottom:64px}
+.pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.pain-card{padding:36px 30px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--rl);transition:background .3s,transform .4s var(--spring),box-shadow .3s}
+.pain-card:hover{background:rgba(255,255,255,.07);transform:translateY(-10px);box-shadow:0 30px 60px rgba(0,0,0,.4)}
+.pico{width:50px;height:50px;border-radius:12px;background:rgba(13,148,136,.18);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:20px;transition:transform .35s var(--spring)}
+.pain-card:hover .pico{transform:scale(1.18) rotate(-8deg)}
+.pain-card h3{color:#fff;margin-bottom:9px}
+.pain-card p{color:rgba(255,255,255,.38);font-size:.93rem}
+
+/* ── PROCESS ── */
+.process{padding:120px 0;background:var(--bg-alt)}
+.proc-hdr{text-align:center;max-width:540px;margin:0 auto 80px}
+.proc-hdr h2{margin-bottom:14px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;position:relative}
+.steps::before{content:'';position:absolute;top:31px;left:calc(16.66% + 20px);right:calc(16.66% + 20px);height:2px;background:linear-gradient(90deg,var(--acc-s),var(--accent),var(--acc-s))}
+.step{text-align:center}
+.step-n{width:62px;height:62px;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:900;margin:0 auto 24px;position:relative;z-index:1;box-shadow:0 0 0 6px var(--acc-s);transition:transform .3s var(--spring),box-shadow .3s}
+.step:hover .step-n{transform:scale(1.13);box-shadow:0 0 0 10px var(--acc-s),0 8px 24px rgba(13,148,136,.3)}
+.step h3{margin-bottom:9px}.step p{font-size:.93rem}
+
+/* ── FEATURES ── */
+.features{padding:120px 0}
+.feat-hdr{max-width:580px;margin-bottom:68px}
+.feat-hdr h2{margin-bottom:14px}
+.feat-hdr h2 em{font-style:normal;color:var(--accent)}
+.feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.feat-card{padding:34px 30px;border:1.5px solid rgba(0,0,0,.08);border-radius:var(--rl);transition:border-color .25s,box-shadow .25s,transform .35s var(--spring)}
+.feat-card:hover{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 20px 40px rgba(13,148,136,.08);transform:translateY(-4px)}
+.feat-ico{width:50px;height:50px;background:var(--acc-xs);border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;margin-bottom:18px;transition:transform .35s var(--spring),background .25s}
+.feat-card:hover .feat-ico{transform:scale(1.1) rotate(-6deg);background:var(--acc-s)}
+.feat-card h3{margin-bottom:9px}.feat-card p{font-size:.93rem}
+
+/* ── COMPARISON ── */
+.comparison{padding:120px 0;background:var(--bg-alt)}
+.cmp-hdr{text-align:center;max-width:520px;margin:0 auto 60px}
+.cmp-hdr h2{margin-bottom:14px}
+.tbl-wrap{border-radius:var(--rl);overflow:hidden;box-shadow:0 4px 50px rgba(0,0,0,.09);overflow-x:auto}
+table{width:100%;border-collapse:collapse;background:#fff;min-width:600px}
+thead{background:var(--dark)}
+thead th{padding:18px 28px;text-align:left;font-size:.86rem;font-weight:700}
+thead th:first-child{color:rgba(255,255,255,.45)}
+thead th:nth-child(2){color:rgba(255,255,255,.45)}
+thead th:nth-child(3){color:var(--accent2)}
+tbody tr{border-bottom:1px solid rgba(0,0,0,.06);transition:background .2s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--acc-xs)}
+td{padding:16px 28px;font-size:.93rem;vertical-align:middle}
+td:first-child{font-weight:700;color:var(--dark)}
+td:nth-child(2){color:var(--muted)}
+td:nth-child(3){font-weight:700;color:var(--accent)}
+.no{color:var(--red);font-weight:700}
+.yes{color:var(--green);font-weight:700}
+
+/* ── STATS ── */
+.stats{padding:80px 0;background:var(--accent)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;text-align:center}
+.stat-n{font-size:clamp(2.1rem,4.2vw,3.8rem);font-weight:900;color:#fff;letter-spacing:-.05em;line-height:1;margin-bottom:8px}
+.stat-l{color:rgba(255,255,255,.7);font-size:.9rem;font-weight:500}
+
+/* ── TESTIMONIALS ── */
+.testimonials{padding:120px 0}
+.test-hdr{max-width:500px;margin-bottom:60px}
+.test-hdr h2{margin-bottom:12px}
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+article.tc{padding:30px 26px;background:var(--bg-alt);border:1.5px solid transparent;border-radius:var(--rl);transition:border-color .25s,box-shadow .25s,transform .35s var(--spring)}
+article.tc:hover{border-color:var(--accent);box-shadow:0 16px 40px rgba(13,148,136,.1);transform:translateY(-5px)}
+.stars{color:#F59E0B;font-size:.88rem;letter-spacing:2px;margin-bottom:16px}
+.tc>p{font-size:.93rem;color:var(--dark);line-height:1.65;margin-bottom:20px;font-style:italic}
+.tc-author{display:flex;align-items:center;gap:11px}
+.tc-av{width:38px;height:38px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;flex-shrink:0}
+.tc-nm{font-size:.87rem;font-weight:700;color:var(--dark)}
+.tc-cl{font-size:.76rem;color:var(--muted)}
+
+/* ── PRICING ── */
+.pricing{padding:120px 0}
+.pricing-hdr{text-align:center;max-width:540px;margin:0 auto 72px}
+.pricing-hdr h2{margin-bottom:14px}
+.pricing-hdr p{font-size:1.05rem}
+
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
+
+.plan{padding:36px 32px;border:1.5px solid rgba(0,0,0,.1);border-radius:var(--rl);position:relative;background:#fff;transition:transform .35s var(--spring),box-shadow .3s}
+.plan:hover{transform:translateY(-6px);box-shadow:0 24px 48px rgba(0,0,0,.09)}
+
+.plan.featured{background:var(--dark);border-color:var(--dark);transform:scale(1.04);box-shadow:0 32px 64px rgba(0,0,0,.2)}
+.plan.featured:hover{transform:scale(1.04) translateY(-6px)}
+
+.plan-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 16px;border-radius:100px;white-space:nowrap}
+
+.plan-name{font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.plan.featured .plan-name{color:rgba(255,255,255,.5)}
+
+.plan-price{margin-bottom:6px}
+.plan-price .amount{font-size:3.2rem;font-weight:900;letter-spacing:-.05em;color:var(--dark);line-height:1}
+.plan.featured .amount{color:#fff}
+.plan-price .per{font-size:.9rem;color:var(--muted);font-weight:500}
+.plan.featured .per{color:rgba(255,255,255,.45)}
+
+.plan-desc{font-size:.87rem;color:var(--muted);margin-bottom:28px;line-height:1.5}
+.plan.featured .plan-desc{color:rgba(255,255,255,.45)}
+
+.plan-feats{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.plan-feats li{display:flex;align-items:flex-start;gap:10px;font-size:.9rem;color:var(--dark);line-height:1.45}
+.plan.featured .plan-feats li{color:rgba(255,255,255,.8)}
+.plan-feats li::before{content:'✓';color:var(--accent);font-weight:900;flex-shrink:0;margin-top:1px}
+.plan-feats li.off{color:var(--muted2)}
+.plan.featured .plan-feats li.off{color:rgba(255,255,255,.25)}
+.plan-feats li.off::before{content:'·';color:var(--muted2)}
+
+.plan .btn{width:100%;justify-content:center}
+
+.pricing-note{text-align:center;margin-top:32px;font-size:.83rem;color:var(--muted)}
+.pricing-note span{margin:0 10px}
+
+/* guarantee strip */
+.guarantee{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:48px;padding:18px 28px;background:var(--acc-xs);border:1px solid var(--acc-s);border-radius:var(--rl);max-width:500px;margin-left:auto;margin-right:auto}
+.guarantee-ico{font-size:1.6rem;flex-shrink:0}
+.guarantee-text strong{display:block;font-size:.95rem;color:var(--dark);margin-bottom:2px}
+.guarantee-text span{font-size:.82rem;color:var(--muted)}
+
+/* ── FAQ ── */
+.faq{padding:120px 0;background:var(--bg-alt)}
+.faq-hdr{text-align:center;max-width:500px;margin:0 auto 60px}
+.faq-hdr h2{margin-bottom:12px}
+.faq-list{max-width:700px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+details{background:#fff;border:1.5px solid rgba(0,0,0,.08);border-radius:var(--r);transition:border-color .25s}
+details[open]{border-color:var(--accent)}
+summary{padding:20px 24px;font-size:.97rem;font-weight:700;color:var(--dark);cursor:pointer;display:flex;justify-content:space-between;align-items:center;list-style:none;user-select:none;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';font-size:1.4rem;font-weight:300;color:var(--accent);transition:transform .3s var(--ease);flex-shrink:0}
+details[open] summary::after{transform:rotate(45deg)}
+.faq-ans{padding:0 24px 20px}
+.faq-ans p{font-size:.94rem}
+
+/* ── FINAL CTA ── */
+.cta-sec{padding:140px 0;background:var(--dark);text-align:center;position:relative;overflow:hidden}
+.cta-sec::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:750px;height:750px;background:radial-gradient(circle,rgba(13,148,136,.17),transparent 65%);border-radius:50%;pointer-events:none;animation:glow 4.5s ease-in-out infinite}
+.cta-sec .sec-lbl{text-align:center;color:#5EEAD4}
+.cta-sec h2{color:#fff;margin-bottom:18px}
+.cta-sec h2 em{font-style:normal;color:var(--accent2)}
+.cta-sec>.container>p{color:rgba(255,255,255,.4);max-width:460px;margin:0 auto 48px;font-size:1.04rem}
+.cta-sec>.container{position:relative;z-index:1}
+.cta-note{margin-top:16px;font-size:.78rem;color:rgba(255,255,255,.28)}
+
+/* ── FOOTER ── */
+footer{background:#080808;padding:52px 0 32px}
+.ft-top{display:flex;justify-content:space-between;align-items:flex-start;gap:40px;margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.07)}
+.ft-brand .logo{font-size:1.18rem}
+.ft-tag{color:rgba(255,255,255,.3);font-size:.8rem;margin-top:7px}
+.ft-links{display:flex;gap:48px}
+.ft-col h4{color:rgba(255,255,255,.5);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;font-weight:700}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.ft-col a{color:rgba(255,255,255,.3);font-size:.83rem;transition:color .2s}
+.ft-col a:hover{color:var(--accent2)}
+.ft-bottom{display:flex;justify-content:space-between;align-items:center}
+.ft-bottom p{color:rgba(255,255,255,.18);font-size:.78rem}
+
+/* ── MOBILE FLOATING CTA ── */
+.mobile-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;padding:12px 16px 20px;background:linear-gradient(to top,rgba(250,250,248,1) 60%,rgba(250,250,248,0));pointer-events:none}
+.mobile-cta a{pointer-events:all;width:100%;justify-content:center;box-shadow:0 8px 30px rgba(13,148,136,.35)}
+.hero-alts{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.hero-alts a{font-size:.84rem;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:color .2s}
+.hero-alts a:hover{color:var(--dark)}
+.cta-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:14px}
+.btn-outline-w{background:transparent;color:rgba(255,255,255,.75);border:1.5px solid rgba(255,255,255,.25)}
+.btn-outline-w:hover{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.5)}
+
+/* ── SCROLL REVEAL ── */
+.rv{opacity:0;transition:opacity .75s var(--ease),transform .75s var(--ease)}
+.rv.up{transform:translateY(44px)}
+.rv.left{transform:translateX(-44px)}
+.rv.right{transform:translateX(44px)}
+.rv.scale{transform:scale(.91)}
+.rv.in{opacity:1!important;transform:none!important}
+.d1{transition-delay:.07s}.d2{transition-delay:.15s}.d3{transition-delay:.23s}.d4{transition-delay:.31s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero .container{grid-template-columns:1fr}
+  .hero-visual{display:none}
+  .pain-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .steps::before{display:none}
+  .feat-grid{grid-template-columns:1fr}
+  .test-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+  .plan.featured{transform:none}
+  .plan.featured:hover{transform:translateY(-6px)}
+  .stats-grid{grid-template-columns:1fr 1fr;gap:24px}
+  .ft-top{flex-direction:column}
+  .ft-links{flex-wrap:wrap;gap:28px}
+  .ft-bottom{flex-direction:column;gap:8px;text-align:center}
+  .hero-btns{flex-direction:column}
+  .hero-btns .btn{justify-content:center}
+  .mobile-cta{display:flex}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-toggle{display:flex}
+  .stats-grid{grid-template-columns:1fr}
+  .trust-lbl{display:none}
+}
+@media(max-width:600px){
+  h1{font-size:2.2rem}
+  .guarantee{flex-direction:column;text-align:center}
+}
+  </style>
+</head>
+<body>
+
+<div id="pgbar" aria-hidden="true"></div>
+
+<!-- ══ MOBILE DRAWER ══ -->
+<nav class="nav-drawer" id="drawer" aria-label="Menú móvil">
+  <a href="#como-funciona" onclick="closeDrawer()">Cómo funciona</a>
+  <a href="#funcionalidades" onclick="closeDrawer()">Funcionalidades</a>
+  <a href="#precios" onclick="closeDrawer()">Precios</a>
+  <a href="#testimonios" onclick="closeDrawer()">Clientes</a>
+  <a href="#faq" onclick="closeDrawer()">FAQ</a>
+  <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20gratuita%20de%20RecepcIA" class="btn btn-a btn-lg" target="_blank" rel="noopener" onclick="closeDrawer()">💬 Pedir demo →</a>
+</nav>
+
+<!-- ══ HEADER ══ -->
+<header id="hdr">
+  <div class="container">
+    <div class="nav">
+      <a href="/" class="logo">MA<em>Health</em></a>
+      <ul class="nav-links">
+        <li><a href="#como-funciona">Cómo funciona</a></li>
+        <li><a href="#funcionalidades">Funcionalidades</a></li>
+        <li><a href="#precios">Precios</a></li>
+        <li><a href="#testimonios">Clientes</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20gratuita%20de%20RecepcIA" class="btn btn-d" target="_blank" rel="noopener" style="flex-shrink:0">💬 Pedir demo →</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ══ HERO ══ -->
+<section class="hero" aria-labelledby="hero-h1">
+  <div class="hero-dots" aria-hidden="true"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="badge"><span class="bdot" aria-hidden="true"></span>Recepcionistas con IA · Para clínicas estéticas y dentales</div>
+      <h1 id="hero-h1">
+        <span class="w" style="--i:0">Tu</span>&nbsp;<span class="w" style="--i:1">clínica</span>&nbsp;<span class="w" style="--i:2">nunca</span>&nbsp;<span class="w" style="--i:3">pierde</span><br>
+        <span class="w" style="--i:4">un</span>&nbsp;<span class="w c" style="--i:5">paciente</span>&nbsp;<span class="w" style="--i:6">más</span>
+      </h1>
+      <p class="hero-p">Creamos recepcionistas virtuales con IA especializadas en clínicas estéticas y dentales. Agenda citas, responde consultas y capta pacientes — las 24 horas, los 7 días de la semana.</p>
+      <div class="hero-btns">
+        <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20gratuita%20de%20RecepcIA" class="btn btn-d btn-lg btn-glow" target="_blank" rel="noopener">💬 Quiero mi demo gratuita →</a>
+        <a href="#como-funciona" class="btn btn-g btn-lg">Ver cómo funciona</a>
+      </div>
+      <div class="hero-alts">
+        <a href="tel:+34633032985">📞 633 032 985</a>
+      </div>
+      <div class="soc-proof">
+        <div class="sp-avs"><div class="spa">CR</div><div class="spa">AM</div><div class="spa">PS</div></div>
+        <p class="soc-text"><strong>+47 clínicas</strong> ya atienden pacientes 24/7 con RecepcIA</p>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="phone-wrap">
+        <div class="phone-glow"></div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-hdr">
+              <span class="ph-back">‹</span>
+              <div class="ph-av">🤖</div>
+              <div><div class="ph-nm">RecepcIA IA</div><div class="ph-st">● En línea ahora</div></div>
+            </div>
+            <div class="phone-msgs">
+              <div class="pm u">Hola! Info sobre blanqueamiento dental? 🦷</div>
+              <div class="pm a">¡Hola! 😊 Blanqueamiento LED desde 149 €. ¿Te interesa?</div>
+              <div class="pm u">Sí! ¿Tienen hueco esta semana?</div>
+              <div class="pm a">Jueves 17:00 o viernes 10:00 👍 ¿Cuál prefieres?</div>
+              <div class="pm u">El jueves perfecto ✅</div>
+            </div>
+            <div class="phone-inp">
+              <div class="pi-bar">Escribe un mensaje...</div>
+              <div class="pi-btn">➤</div>
+            </div>
+          </div>
+        </div>
+        <div class="fbadge fb1"><span class="fbd g"></span>Cita agendada 🎉</div>
+        <div class="fbadge fb2"><span class="fbd t"></span>Respuesta en 4 seg</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TRUST BAR (marquee) ══ -->
+<div class="trust-bar" aria-label="Integraciones compatibles">
+  <div class="trust-track-wrap">
+    <span class="trust-lbl">Compatible con</span>
+    <div class="trust-marquee">
+      <div class="trust-track">
+        <div class="ti"><span>💬</span>WhatsApp</div>
+        <div class="ti"><span>📅</span>Google Calendar</div>
+        <div class="ti"><span>📸</span>Instagram DMs</div>
+        <div class="ti"><span>📧</span>Email</div>
+        <div class="ti"><span>📞</span>Llamadas</div>
+        <div class="ti"><span>🌐</span>Tu web</div>
+        <div class="ti"><span>📋</span>Clinicalia</div>
+        <div class="ti"><span>🏥</span>Doctoralia</div>
+        <!-- duplicate for seamless loop -->
+        <div class="ti"><span>💬</span>WhatsApp</div>
+        <div class="ti"><span>📅</span>Google Calendar</div>
+        <div class="ti"><span>📸</span>Instagram DMs</div>
+        <div class="ti"><span>📧</span>Email</div>
+        <div class="ti"><span>📞</span>Llamadas</div>
+        <div class="ti"><span>🌐</span>Tu web</div>
+        <div class="ti"><span>📋</span>Clinicalia</div>
+        <div class="ti"><span>🏥</span>Doctoralia</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAIN ══ -->
+<section class="pain" aria-labelledby="pain-h2">
+  <div class="container">
+    <span class="sec-lbl rv up">El problema</span>
+    <h2 id="pain-h2" class="rv up d1">¿Te suena familiar?</h2>
+    <p class="pain-lead rv up d2">Las clínicas pierden entre el 20 y el 40 % de sus pacientes potenciales por razones que tienen solución inmediata.</p>
+    <div class="pain-grid">
+      <div class="pain-card rv up d1">
+        <div class="pico" aria-hidden="true">📞</div>
+        <h3>Llamadas sin respuesta</h3>
+        <p>Mientras atiendes a un paciente, el teléfono suena y nadie lo coge. Ese paciente llama a tu competencia.</p>
+      </div>
+      <div class="pain-card rv up d2">
+        <div class="pico" aria-hidden="true">🌙</div>
+        <h3>Consultas fuera del horario</h3>
+        <p>El 40 % de las consultas llegan por la noche o fin de semana. Sin respuesta inmediata, pierdes la oportunidad.</p>
+      </div>
+      <div class="pain-card rv up d3">
+        <div class="pico" aria-hidden="true">💸</div>
+        <h3>Coste del personal administrativo</h3>
+        <p>Una recepcionista cuesta más de 1.800 €/mes, tiene bajas y no puede estar disponible siempre. Tu IA, sí.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROCESS ══ -->
+<section class="process" id="como-funciona" aria-labelledby="proc-h2">
+  <div class="container">
+    <div class="proc-hdr rv up">
+      <span class="sec-lbl">El proceso</span>
+      <h2 id="proc-h2">Operativa en 48 horas</h2>
+      <p>Sin instalaciones complejas. Tu IA empieza a trabajar en dos días.</p>
+    </div>
+    <div class="steps">
+      <div class="step rv up d1">
+        <div class="step-n" aria-hidden="true">1</div>
+        <h3>Cuéntanos tu clínica</h3>
+        <p>Una llamada de 30 minutos. Nos explicas tus tratamientos, horarios y cómo quieres atender a tus pacientes.</p>
+      </div>
+      <div class="step rv up d2">
+        <div class="step-n" aria-hidden="true">2</div>
+        <h3>Configuramos tu IA</h3>
+        <p>Entrenamos a tu recepcionista virtual con toda la información de tu clínica y la conectamos a tus canales.</p>
+      </div>
+      <div class="step rv up d3">
+        <div class="step-n" aria-hidden="true">3</div>
+        <h3>Empieza a captar pacientes</h3>
+        <p>Tu IA gestiona llamadas, WhatsApp y consultas desde el primer día. Tú solo supervisas y creces.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FEATURES ══ -->
+<section class="features" id="funcionalidades" aria-labelledby="feat-h2">
+  <div class="container">
+    <div class="feat-hdr rv up">
+      <span class="sec-lbl">Funcionalidades</span>
+      <h2 id="feat-h2">Todo lo que necesita<br>tu clínica, <em>automatizado</em></h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card rv up d1">
+        <div class="feat-ico" aria-hidden="true">🗓️</div>
+        <h3>Agenda de citas 24/7</h3>
+        <p>Reserva, modifica y cancela citas automáticamente. Disponibilidad para los próximos 28 días, sin huecos sin responder.</p>
+      </div>
+      <div class="feat-card rv up d2">
+        <div class="feat-ico" aria-hidden="true">✅</div>
+        <h3>Confirmación y gestión de ausencias</h3>
+        <p>24h antes, el paciente recibe un "¿Confirmas tu cita?" Si no responde, la clínica recibe un aviso automático del posible hueco libre.</p>
+      </div>
+      <div class="feat-card rv up d3">
+        <div class="feat-ico" aria-hidden="true">⭐</div>
+        <h3>Captación automática de reseñas Google</h3>
+        <p>Tras cada visita, el paciente puntúa del 1 al 5. Si valora 4 o 5 estrellas, recibe el enlace directo a tu ficha de Google para dejar la reseña.</p>
+      </div>
+      <div class="feat-card rv up d4">
+        <div class="feat-ico" aria-hidden="true">🔄</div>
+        <h3>Recordatorio de revisión a los 6 meses</h3>
+        <p>A los 6 meses de la última visita, el paciente recibe un WhatsApp automático invitándole a volver. Sin que tú tengas que hacer nada.</p>
+      </div>
+      <div class="feat-card rv up d1">
+        <div class="feat-ico" aria-hidden="true">📣</div>
+        <h3>Campaña de reactivación al año</h3>
+        <p>Si un paciente lleva 12 meses sin volver, recibe un mensaje personalizado para reactivarle. Recupera pacientes perdidos en piloto automático.</p>
+      </div>
+      <div class="feat-card rv up d2">
+        <div class="feat-ico" aria-hidden="true">📋</div>
+        <h3>Ficha del paciente con historial</h3>
+        <p>El agente recuerda los tratamientos anteriores de cada paciente y personaliza la conversación. Como una recepcionista que conoce a todos.</p>
+      </div>
+      <div class="feat-card rv up d3">
+        <div class="feat-ico" aria-hidden="true">📊</div>
+        <h3>Informe mensual automático</h3>
+        <p>El día 1 de cada mes recibes un resumen por WhatsApp: citas gestionadas, nuevos pacientes, pacientes recurrentes y valoración media.</p>
+      </div>
+      <div class="feat-card rv up d4">
+        <div class="feat-ico" aria-hidden="true">💬</div>
+        <h3>Atención multicanal instantánea</h3>
+        <p>WhatsApp y llamadas respondidos en menos de 10 segundos, cualquier hora del día, cualquier día del año.</p>
+      </div>
+      <div class="feat-card rv up d1">
+        <div class="feat-ico" aria-hidden="true">🎯</div>
+        <h3>IA entrenada en tu clínica</h3>
+        <p>Conoce tus tratamientos, tarifas y horarios. Cada respuesta es 100 % personalizada para tu negocio, lista en 48 horas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ COMPARISON ══ -->
+<section class="comparison" aria-labelledby="cmp-h2">
+  <div class="container">
+    <div class="cmp-hdr rv up">
+      <span class="sec-lbl">Comparativa</span>
+      <h2 id="cmp-h2">Tu equipo más IA: una clínica sin límites</h2>
+      <p>RecepcIA no sustituye a nadie — libera a tu equipo de las tareas repetitivas para que se centre en lo que importa: los pacientes.</p>
+    </div>
+    <div class="tbl-wrap rv scale">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Situación</th>
+            <th scope="col">Solo con tu equipo</th>
+            <th scope="col">Tu equipo + RecepcIA ✓</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Disponibilidad total</td><td>Solo en horario de apertura</td><td>24 / 7 / 365</td></tr>
+          <tr><td>Coste de ampliar cobertura</td><td>+1.800 € – 2.400 €/mes</td><td>Desde 99 €/mes</td></tr>
+          <tr><td>Tiempo de respuesta</td><td>Minutos u horas (según carga)</td><td>Menos de 10 segundos</td></tr>
+          <tr><td>Fines de semana y festivos</td><td class="no">✗ Sin cobertura</td><td class="yes">✓ Siempre cubiertos</td></tr>
+          <tr><td>Escalabilidad</td><td class="no">✗ Requiere contratar más</td><td class="yes">✓ Ilimitada sin coste extra</td></tr>
+          <tr><td>Puesta en marcha</td><td>Semanas (formación)</td><td>48 horas</td></tr>
+          <tr><td>Tasa de no-shows</td><td>25 % – 35 %</td><td>Menos del 8 %</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STATS ══ -->
+<section class="stats" id="stats-sec" aria-label="Resultados de RecepcIA">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="rv scale d1"><div class="stat-n" id="s1" data-t="68" data-p="+" data-s="%">+68%</div><div class="stat-l">más citas al mes</div></div>
+      <div class="rv scale d2"><div class="stat-n" id="s2" data-t="80" data-p="−" data-s="%">−80%</div><div class="stat-l">reducción de ausencias</div></div>
+      <div class="rv scale d3"><div class="stat-n">24/7</div><div class="stat-l">atención sin interrupciones</div></div>
+      <div class="rv scale d4"><div class="stat-n" id="s3" data-t="48" data-p="" data-s="h">48h</div><div class="stat-l">para estar operativa</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TESTIMONIALS ══ -->
+<section class="testimonials" id="testimonios" aria-labelledby="test-h2">
+  <div class="container">
+    <div class="test-hdr rv up">
+      <span class="sec-lbl">Testimonios</span>
+      <h2 id="test-h2">Lo que dicen<br>nuestras clínicas</h2>
+    </div>
+    <div class="test-grid">
+      <article class="tc rv up d1">
+        <div class="stars" aria-label="5 estrellas">★★★★★</div>
+        <p>"Desde que instalamos RecepcIA no hemos vuelto a perder una cita por teléfono. En el primer mes recuperamos completamente la inversión."</p>
+        <div class="tc-author">
+          <div class="tc-av" aria-hidden="true">CR</div>
+          <div><div class="tc-nm">Dra. Carmen Reyes</div><div class="tc-cl">Clínica Dental Reyes · Valencia</div></div>
+        </div>
+      </article>
+      <article class="tc rv up d2">
+        <div class="stars" aria-label="5 estrellas">★★★★★</div>
+        <p>"Nuestros pacientes se sorprenden de lo rápido que responde. Muchos creen que es una persona real. Las citas por WhatsApp se dispararon."</p>
+        <div class="tc-author">
+          <div class="tc-av" aria-hidden="true" style="background:#5EEAD4;color:var(--dark)">AM</div>
+          <div><div class="tc-nm">Ana Martínez</div><div class="tc-cl">Centro Estético Aura · Madrid</div></div>
+        </div>
+      </article>
+      <article class="tc rv up d3">
+        <div class="stars" aria-label="5 estrellas">★★★★★</div>
+        <p>"Configuración increíblemente sencilla. En 48 horas ya atendía a nuestros pacientes. Las ausencias bajaron a la mitad en el primer mes."</p>
+        <div class="tc-author">
+          <div class="tc-av" aria-hidden="true" style="background:#0F766E">PS</div>
+          <div><div class="tc-nm">Dr. Pablo Sánchez</div><div class="tc-cl">Clínica Dental Sánchez · Barcelona</div></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PRICING ══ -->
+<section class="pricing" id="precios" aria-labelledby="pricing-h2">
+  <div class="container">
+    <div class="pricing-hdr rv up">
+      <span class="sec-lbl">Precios</span>
+      <h2 id="pricing-h2">Transparente desde el primer día</h2>
+      <p>Sin letra pequeña. Sin permanencia. Cancela cuando quieras.</p>
+    </div>
+    <div class="pricing-grid">
+
+      <!-- BÁSICO -->
+      <div class="plan rv up d1">
+        <div class="plan-name">Básico</div>
+        <div class="plan-price">
+          <span class="amount">99</span><span class="per"> €/mes</span>
+        </div>
+        <p class="plan-desc">Para clínicas que quieren empezar con un canal y crecer.</p>
+        <ul class="plan-feats">
+          <li>1 canal (WhatsApp <em>o</em> web)</li>
+          <li>Hasta 500 conversaciones/mes</li>
+          <li>Agenda de citas automática</li>
+          <li>Recordatorios anti no-show</li>
+          <li>Configuración en 48 h</li>
+          <li class="off">Panel de control</li>
+          <li class="off">Canales adicionales</li>
+        </ul>
+        <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20RecepcIA" class="btn btn-g" target="_blank" rel="noopener">💬 Empezar →</a>
+      </div>
+
+      <!-- PRO (featured) -->
+      <div class="plan featured rv up d2">
+        <div class="plan-badge">Más elegido</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">
+          <span class="amount">149</span><span class="per"> €/mes</span>
+        </div>
+        <p class="plan-desc">El favorito de las clínicas que quieren resultados desde el día uno.</p>
+        <ul class="plan-feats">
+          <li>3 canales (WhatsApp + web + email)</li>
+          <li>Conversaciones ilimitadas</li>
+          <li>Agenda + recordatorios automáticos</li>
+          <li>Panel de control y métricas</li>
+          <li>Configuración en 48 h</li>
+          <li>Soporte por WhatsApp</li>
+          <li class="off">Múltiples sedes</li>
+        </ul>
+        <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20empezar%20con%20RecepcIA" class="btn btn-a btn-glow" target="_blank" rel="noopener">💬 Empezar ahora →</a>
+      </div>
+
+      <!-- CLÍNICA+ -->
+      <div class="plan rv up d3">
+        <div class="plan-name">Clínica+</div>
+        <div class="plan-price">
+          <span class="amount">249</span><span class="per"> €/mes</span>
+        </div>
+        <p class="plan-desc">Para centros con más volumen, varios profesionales o varias sedes.</p>
+        <ul class="plan-feats">
+          <li>Todos los canales (+ Instagram + llamadas)</li>
+          <li>Conversaciones ilimitadas</li>
+          <li>Panel avanzado + reportes exportables</li>
+          <li>Múltiples sedes y profesionales</li>
+          <li>Integración con tu software de gestión</li>
+          <li>Soporte prioritario dedicado</li>
+        </ul>
+        <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20saber%20m%C3%A1s%20sobre%20el%20plan%20Enterprise%20de%20RecepcIA" class="btn btn-d" target="_blank" rel="noopener">💬 Contactar →</a>
+      </div>
+
+    </div>
+
+    <p class="pricing-note rv up">
+      <span>✓ Sin permanencia</span>
+      <span>✓ Cancela cuando quieras</span>
+      <span>✓ Prueba gratuita de 14 días</span>
+    </p>
+
+    <div class="guarantee rv up">
+      <div class="guarantee-ico" aria-hidden="true">🛡️</div>
+      <div class="guarantee-text">
+        <strong>Garantía de satisfacción de 30 días</strong>
+        <span>Si en 30 días no ves resultados, te devolvemos el dinero. Sin preguntas.</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<section class="faq" id="faq" aria-labelledby="faq-h2">
+  <div class="container">
+    <div class="faq-hdr rv up">
+      <span class="sec-lbl">Preguntas frecuentes</span>
+      <h2 id="faq-h2">Todo lo que necesitas saber</h2>
+      <p>Resolvemos tus dudas antes de empezar.</p>
+    </div>
+    <div class="faq-list rv up d1">
+      <details>
+        <summary>¿Funciona con mi software de gestión de citas actual?</summary>
+        <div class="faq-ans"><p>Sí. Nos integramos con Clinicalia, Doctoralia, iClinic, Google Calendar y muchos más. Si usas otro sistema, lo evaluamos en la llamada inicial sin compromiso.</p></div>
+      </details>
+      <details>
+        <summary>¿Qué pasa si un paciente hace una pregunta que la IA no sabe responder?</summary>
+        <div class="faq-ans"><p>La IA reconoce cuándo una pregunta supera sus conocimientos y deriva la conversación a tu equipo de forma natural. Nunca deja a un paciente sin respuesta.</p></div>
+      </details>
+      <details>
+        <summary>¿En cuánto tiempo estará lista mi recepcionista virtual?</summary>
+        <div class="faq-ans"><p>48 horas desde la llamada inicial. Recibimos información de tu clínica, entrenamos la IA, la conectamos a tus canales y hacemos pruebas antes de activarla.</p></div>
+      </details>
+      <details>
+        <summary>¿Puedo personalizar el nombre y el tono de la IA?</summary>
+        <div class="faq-ans"><p>Totalmente. Puede tener el nombre que quieras, hablar con el tono de tu clínica y adaptar su comunicación a tu identidad de marca.</p></div>
+      </details>
+      <details>
+        <summary>¿Hay permanencia o compromiso mínimo?</summary>
+        <div class="faq-ans"><p>No hay permanencia. Cancela en cualquier momento. Además, tienes 14 días de prueba gratuita y garantía de devolución de 30 días.</p></div>
+      </details>
+      <details>
+        <summary>¿Funciona para clínicas estéticas y dentales al mismo tiempo?</summary>
+        <div class="faq-ans"><p>Sí. Si tienes ambas o un centro mixto, la configuramos para que atienda todos tus servicios sin problema.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FINAL CTA ══ -->
+<section class="cta-sec" aria-labelledby="cta-h2">
+  <div class="container rv up">
+    <span class="sec-lbl">Empieza hoy</span>
+    <h2 id="cta-h2">¿Lista para no perder<br>otro <em>paciente</em>?</h2>
+    <p>Cuéntanos sobre tu clínica. En 20 minutos te mostramos cómo funcionaría para ti, sin compromiso.</p>
+    <div class="cta-btns">
+      <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20gratuita%20de%20RecepcIA" class="btn btn-a btn-lg btn-glow" target="_blank" rel="noopener">💬 WhatsApp</a>
+      <a href="tel:+34633032985" class="btn btn-outline-w btn-lg">📞 633 032 985</a>
+    </div>
+    <p class="cta-note">Sin permanencia &nbsp;·&nbsp; Prueba 14 días gratis &nbsp;·&nbsp; Garantía 30 días</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="container">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <div class="logo">MA<em>Health</em></div>
+        <p class="ft-tag">Recepcionistas virtuales con IA<br>para clínicas estéticas y dentales</p>
+      </div>
+      <div class="ft-links">
+        <div class="ft-col">
+          <h4>Producto</h4>
+          <ul>
+            <li><a href="#como-funciona">Cómo funciona</a></li>
+            <li><a href="#funcionalidades">Funcionalidades</a></li>
+            <li><a href="#precios">Precios</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="ft-col">
+          <h4>Especialidades</h4>
+          <ul>
+            <li><a href="https://estetica.recepcia.health">Clínicas estéticas</a></li>
+            <li><a href="https://dental.recepcia.health">Clínicas dentales</a></li>
+            <li><a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20gratuita%20de%20RecepcIA" target="_blank" rel="noopener">Demo gratuita</a></li>
+          </ul>
+        </div>
+        <div class="ft-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacidad</a></li>
+            <li><a href="#">Términos de uso</a></li>
+            <li><a href="#">Cookies</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="ft-bottom">
+      <p>© 2026 RecepcIA · Todos los derechos reservados</p>
+      <p>Hecho con IA · Para clínicas con visión</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ MOBILE FLOATING CTA ══ -->
+<div class="mobile-cta" aria-hidden="true">
+  <a href="https://wa.me/34633032985?text=Hola%2C%20me%20gustar%C3%ADa%20pedir%20una%20demo%20gratuita%20de%20RecepcIA" class="btn btn-a btn-lg" target="_blank" rel="noopener">💬 Quiero mi demo gratuita →</a>
+</div>
+
+<script>
+/* ── PROGRESS BAR ── */
+const pgbar = document.getElementById('pgbar');
+window.addEventListener('scroll', () => {
+  pgbar.style.width = (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100) + '%';
+}, { passive: true });
+
+/* ── HEADER SCROLL ── */
+const hdr = document.getElementById('hdr');
+window.addEventListener('scroll', () => {
+  hdr.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+/* ── HAMBURGER NAV ── */
+const toggle = document.getElementById('navToggle');
+const drawer = document.getElementById('drawer');
+
+function closeDrawer() {
+  toggle.classList.remove('open');
+  drawer.classList.remove('open');
+  toggle.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+
+toggle.addEventListener('click', () => {
+  const isOpen = drawer.classList.toggle('open');
+  toggle.classList.toggle('open', isOpen);
+  toggle.setAttribute('aria-expanded', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+});
+
+/* close on outside click */
+drawer.addEventListener('click', e => { if (e.target === drawer) closeDrawer(); });
+
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); closeDrawer(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+});
+
+/* ── SCROLL REVEAL ── */
+const rvObs = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.11 });
+document.querySelectorAll('.rv').forEach(el => rvObs.observe(el));
+
+/* ── COUNTER ANIMATION ── */
+function countUp(el) {
+  const target = +el.dataset.t, prefix = el.dataset.p || '', suffix = el.dataset.s || '';
+  const dur = 2000, t0 = performance.now();
+  (function tick(now) {
+    const p = Math.min((now - t0) / dur, 1);
+    el.textContent = prefix + Math.round((1 - Math.pow(1 - p, 3)) * target) + suffix;
+    if (p < 1) requestAnimationFrame(tick);
+  })(t0);
+}
+const statsObs = new IntersectionObserver(es => {
+  if (es[0].isIntersecting) {
+    ['s1','s2','s3'].forEach(id => { const el = document.getElementById(id); if (el) countUp(el); });
+    statsObs.disconnect();
+  }
+}, { threshold: 0.5 });
+const statsEl = document.getElementById('stats-sec');
+if (statsEl) statsObs.observe(statsEl);
+
+/* ── HIDE MOBILE CTA NEAR FOOTER ── */
+const mobileCta = document.querySelector('.mobile-cta');
+const footerEl  = document.querySelector('footer');
+if (mobileCta && footerEl) {
+  new IntersectionObserver(es => {
+    mobileCta.style.display = es[0].isIntersecting ? 'none' : '';
+  }, { threshold: 0 }).observe(footerEl);
+}
+</script>
+
+</body>
+</html>
