@@ -299,7 +299,7 @@ async function anotarListaEspera(name, phone, treatment, env, clinicId, clinica)
   );
 }
 
-async function cancelAppointment(fromPhone, slotStr, env, clinicId) {
+async function cancelAppointment(fromPhone, slotStr, env, clinicId, twilioFrom) {
   const k = K(clinicId);
   const normalizedFrom = fromPhone.replace('whatsapp:', '').replace(/\s/g, '');
   const bookingKey = k.booking(slotStr);
@@ -325,7 +325,7 @@ async function cancelAppointment(fromPhone, slotStr, env, clinicId) {
     try {
       await twilioSend(entry.phone,
         `🎉 ¡Buenas noticias, ${entry.name}! Se ha liberado el hueco *${cita.slot}*. ¿Te lo reservamos? Escríbenos para confirmarlo.`,
-        env
+        env, twilioFrom
       );
     } catch (e) { console.error('Error notificando lista de espera:', e); }
   }
@@ -524,6 +524,10 @@ async function generarInformeMensual(env, clinicId, clinica) {
 
 // ── Panel de citas ───────────────────────────────────────────────────────────
 
+function escapeXml(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 }
@@ -698,14 +702,14 @@ export default {
 
       if (request.method === 'POST') {
         try {
-          const formData = await request.formData();
-          const clave = formData.get('clave') || '';
-          const panelPass = clinica?.panelPassword || env.PANEL_PASSWORD;
-          if (!panelPass || clave !== panelPass) {
-            return new Response(renderLoginPage(true, clinicId), { status: 401, headers: { 'Content-Type': 'text/html; charset=UTF-8' } });
-          }
           if (!clinicId || !clinica) {
             return new Response('Clínica no encontrada. Usa ?clinic=+34XXXXXXXXX', { status: 400 });
+          }
+          const formData = await request.formData();
+          const clave = formData.get('clave') || '';
+          const panelPass = clinica.panelPassword || env.PANEL_PASSWORD;
+          if (!panelPass || clave !== panelPass) {
+            return new Response(renderLoginPage(true, clinicId), { status: 401, headers: { 'Content-Type': 'text/html; charset=UTF-8' } });
           }
           const k = K(clinicId);
           const bookingsList = await env.MEMORIA.list({ prefix: k.prefix('booking') });
@@ -1007,17 +1011,7 @@ INSTRUCCIONES:
         if (confirmMsg === 'CONFIRMO') {
           await twilioSend(fromNorm, `✅ ¡Perfecto! Tu cita está confirmada. ¡Te esperamos mañana!`, env, clinica.twilioFrom);
         } else {
-          const allKeys = await env.MEMORIA.list({ prefix: k.prefix('booking') });
-          for (const bk of allKeys.keys) {
-            const raw = await env.MEMORIA.get(bk.name);
-            if (!raw) continue;
-            const cita = JSON.parse(raw);
-            const citaPhone = normalizePhone(destinoPaciente(cita).replace('whatsapp:', ''));
-            if (citaPhone === fromNorm && bk.name.includes(pendingConfirmSlot)) {
-              await env.MEMORIA.delete(bk.name);
-              break;
-            }
-          }
+          await env.MEMORIA.delete(k.booking(pendingConfirmSlot));
           await twilioSend(fromNorm, `Entendido, hemos cancelado tu cita. Si quieres volver a reservar, escríbenos cuando quieras. 😊`, env, clinica.twilioFrom);
           await twilioSend(clinica.escaladoNumero,
             `⚠️ CITA CANCELADA POR EL PACIENTE\nTeléfono: ${fromNorm}\nSlot: ${pendingConfirmSlot}`,
@@ -1060,7 +1054,7 @@ INSTRUCCIONES:
       let slotsText = 'No hay huecos disponibles esta semana. Consulta directamente.';
       try {
         const slots = await getAvailableSlots(env, clinicId);
-        if (slots.length > 0) slotsText = `Huecos disponibles: ${slots.join(' | ')}`;
+        if (slots.length > 0) slotsText = `Huecos disponibles: ${slots.slice(0, 15).join(' | ')}`;
       } catch (e) { slotsText = 'No se pudo consultar la agenda en este momento.'; }
 
       // Ficha del paciente
@@ -1149,7 +1143,7 @@ INSTRUCCIONES IMPORTANTES:
         const slotACancelar = cancelarMatch[1].trim();
         agentReply = agentReply.replace(/\[CANCELAR:[^\]]+\]/, '').trim();
         try {
-          const cancelled = await cancelAppointment(from, slotACancelar, env, clinicId);
+          const cancelled = await cancelAppointment(from, slotACancelar, env, clinicId, clinica.twilioFrom);
           for (const cita of cancelled) {
             try {
               await twilioSend(clinica.escaladoNumero,
@@ -1211,10 +1205,10 @@ INSTRUCCIONES IMPORTANTES:
       }
 
       historial.push({ role: 'assistant', content: agentReply });
-      await env.MEMORIA.put(histKey, JSON.stringify(historial), { expirationTtl: 86400 });
+      await env.MEMORIA.put(histKey, JSON.stringify(historial), { expirationTtl: 7 * 24 * 3600 });
 
       return new Response(
-        `<?xml version="1.0" encoding="UTF-8"?><Response><Message>${agentReply}</Message></Response>`,
+        `<?xml version="1.0" encoding="UTF-8"?><Response><Message>${escapeXml(agentReply)}</Message></Response>`,
         { headers: { 'Content-Type': 'text/xml' } }
       );
 
